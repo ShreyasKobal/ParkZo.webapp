@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>ParkZo – Receipt</title>
+
+  <link rel="stylesheet" href="CSS/styles.css" />
+
+  <style>
+    body {
+      background: linear-gradient(135deg, #0f172a, #020617);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    .receipt-card {
+      width: 100%;
+      max-width: 520px;
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.25);
+      animation: fadeUp 0.4s ease;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .receipt-header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .receipt-header h2 {
+      margin: 0;
+      font-size: 24px;
+      color: #0f172a;
+    }
+
+    .receipt-header p {
+      margin-top: 6px;
+      color: #16a34a;
+      font-weight: 600;
+    }
+
+    .receipt-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      font-size: 15px;
+    }
+
+    .receipt-row span:first-child {
+      color: #64748b;
+    }
+
+    .receipt-row span:last-child {
+      font-weight: 600;
+      color: #0f172a;
+      text-align: right;
+    }
+
+    .divider {
+      height: 1px;
+      background: #0f172a;
+      margin: 18px 0;
+    }
+
+    .total {
+      font-size: 18px;
+      font-weight: 700;
+      color: #16a34a;
+    }
+
+    .footer-actions {
+      margin-top: 24px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .home-btn {
+      background: #020617;
+      color: #fff;
+      padding: 12px 26px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      border: #131702 solid 1px;
+    }
+
+    .home-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.25);
+      background-color: white;
+      color: #020617;
+      border: #020617 solid 1px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="receipt-card">
+
+    <div class="receipt-header">
+      <h2>ParkZo Receipt</h2>
+      <p>Payment Successful ✅</p>
+    </div>
+
+    <div class="receipt-row">
+      <span>Booking ID</span>
+      <span id="r-id"></span>
+    </div>
+
+    <div class="receipt-row">
+      <span>Customer Name</span>
+      <span id="r-name"></span>
+    </div>
+
+    <div class="receipt-row">
+      <span>Vehicle Number</span>
+      <span id="r-vehicle"></span>
+    </div>
+
+    <div class="receipt-row">
+      <span>Location</span>
+      <span id="r-location"></span>
+    </div>
+
+    <div class="receipt-row">
+      <span>Date</span>
+      <span id="r-date"></span>
+    </div>
+
+    <div class="receipt-row">
+      <span>Time</span>
+      <span id="r-time"></span>
+    </div>
+
+    <div class="receipt-row">
+      <span>Vehicle Type</span>
+      <span id="r-type"></span>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="receipt-row total">
+      <span>Amount Paid</span>
+      <span id="r-amount"></span>
+    </div>
+
+    <div class="footer-actions">
+      <a href="index.html" class="home-btn">Go to Home</a>
+    </div>
+
+  </div>
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase.js"></script>
+
+  <!-- Receipt Logic -->
+  <script>
+    async function loadReceipt() {
+      const bookingId = sessionStorage.getItem("receiptBookingId");
+
+      if (!bookingId) {
+        alert("No receipt found");
+        window.location.href = "index.html";
+        return;
+      }
+
+      const { data, error } = await supabaseClient
+        .from("parking_bookings")
+        .select("*")
+        .eq("id", bookingId)
+        .single();
+
+      if (error) {
+        alert("Failed to load receipt");
+        return;
+      }
+
+      document.getElementById("r-id").innerText = data.id;
+      document.getElementById("r-name").innerText = data.customer_name;
+      document.getElementById("r-vehicle").innerText = data.vehicle_number;
+      document.getElementById("r-location").innerText = data.location;
+      document.getElementById("r-date").innerText = data.booking_date;
+      document.getElementById("r-time").innerText = `${data.start_time} - ${data.end_time}`;
+      document.getElementById("r-type").innerText = data.vehicle_type.replace("_", " ");
+      document.getElementById("r-amount").innerText = `₹${data.amount_paid}`;
+    }
+
+    loadReceipt();
+  </script>
+
+</body>
+</html>

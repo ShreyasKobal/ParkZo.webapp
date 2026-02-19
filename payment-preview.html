@@ -1,0 +1,189 @@
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>ParkZo</title>
+    <link rel="stylesheet" href="CSS/styles.css" />
+    <link rel="stylesheet" href="CSS/payment-preview.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  </head>
+
+  <body>
+    
+        <header class="navbar">
+        <nav class="nav-container">
+
+        <!-- LEFT SECTION -->
+        <div class="nav-left">
+          <button class="menu-btn">☰</button>
+
+          <div class="brand">
+            <button class="brand-btn">
+              <h1 class="brand-name">ParkZo</h1>
+              <span class="brand-dots">...</span>
+              <div class="car-anim-wrapper">
+                  <img src="images/carlogo.png" alt="Car Logo" class="brand-logo car-anim" />
+              </div>
+              
+            </button>
+            <p class="brand-tagline">Find Park Go!</p>
+          </div>
+        </div>
+
+        <!-- CENTER SECTION -->
+        <!-- <div class="nav-center">
+              <div class="search-wrapper">
+                  <input type="text" placeholder="Search for the location..." class="search-input">
+                  <button class="search-btn">
+                      <i class="fas fa-search"></i>
+                  </button>
+              </div>
+          </div> -->
+        <!-- RIGHT SECTION -->
+        <div class="nav-right">
+          <button class="nav-link">Contact</button>
+
+          <button class="icon-btn notification-btn">
+            🔔
+            <span class="notification-dot"></span>
+          </button>
+
+          <button class="icon-btn">
+            <img src="images/chatbotlogo.png" alt="Chat" />
+          </button>
+
+          <button class="icon-btn">
+            <img src="images/userlogo.png" alt="User" />
+          </button>
+        </div>
+
+        </nav>
+        </header>
+        <main>
+
+          <div class="preview-page">
+
+      <div class="preview-card">
+        <h2>Available Parking</h2>
+
+        <!-- Location -->
+        <div class="preview-row">
+          <span class="label">Location</span>
+          <span class="value" id="previewLocation"></span>
+        </div>
+
+        <!-- Time -->
+        <div class="preview-row">
+          <span class="label">Date | Time</span>
+          <span class="value" id="previewTime"></span>
+        </div>
+
+        <!-- Vehicle Type -->
+        <div class="preview-row">
+          <span class="label">Vehicle Type</span>
+          <span class="value" id="previewVehicle"></span>
+        </div>
+
+        <!-- Price -->
+        <div class="preview-row price">
+          <span class="label">Price</span>
+          <span class="value" id="previewPrice"></span>
+        </div>
+
+        <!-- Action -->
+        <button class="pay-btn" id="payNowBtn">
+          Proceed to Pay
+        </button> 
+      </div>
+
+    </div>
+
+          <!-- ============ FOOTER ============ -->
+
+        <footer class="footer">
+    <div class="footer-container">
+
+      <div class="footer-left">
+    <div class="footer-branding">
+    <span class="footer-brand-name">ParkZo</span>
+    <span class="footer-brand-dots">...</span>
+    <img src="images/carlogo.png" alt="ParkZo car" class="footer-car">
+  </div>
+
+    <p class="footer-tagline">
+      Smart, reliable parking for smarter cities.
+    </p>
+  </div>
+
+      <div class="footer-right">
+        <a href="#" class="footer-link">Privacy</a>
+        <a href="#" class="footer-link">Terms</a>
+        <a href="#" class="footer-link">Contact</a>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      © 2026 ParkZo. All rights reserved.
+    </div>
+
+    
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase.js"></script>
+
+  <script>
+   
+  const bookingLocation = sessionStorage.getItem("bookingLocation");
+  const timeRange = sessionStorage.getItem("timeRange");
+  const amountPaid = sessionStorage.getItem("amountPaid");
+  const bookingDate = sessionStorage.getItem("bookingDate");
+
+  if (!bookingLocation || !timeRange || !amountPaid || !bookingDate) {
+    alert("Booking data missing. Please book again.");
+    window.location.href = "booking.html";
+  }
+
+  document.getElementById("previewLocation").innerText = bookingLocation;
+  document.getElementById("previewTime").innerText = `${bookingDate} | ${timeRange}`;
+  document.getElementById("previewVehicle").innerText =
+    amountPaid % 30 === 0 ? "4 Wheeler" : "2 Wheeler";
+  document.getElementById("previewPrice").innerText = `₹${amountPaid}`;
+
+
+  </script>
+
+    <script>
+    document.getElementById("payNowBtn").addEventListener("click", async () => {
+      const bookingId = sessionStorage.getItem("bookingId");
+
+      if (!bookingId) {
+        alert("Booking not found");
+        return;
+      }
+
+      const { error } = await supabaseClient
+        .from("parking_bookings")
+        .update({
+          payment_status: "paid",
+          payment_time: new Date().toISOString()
+        })
+        .eq("id", bookingId);
+
+      if (error) {
+        alert("Payment failed");
+        console.error(error);
+        return;
+      }
+
+      // clear temp storage
+      sessionStorage.clear();
+
+      // redirect to success page
+      window.location.href = "payment-success.html";
+    });
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase.js"></script>
+        </body> 
+        </html>

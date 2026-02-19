@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>ParkZo</title>
+  <link rel="stylesheet" href="CSS/styles.css" />
+  <link rel="stylesheet" href="CSS/booking.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+   
+       <header class="navbar">
+      <nav class="nav-container">
+
+      <!-- LEFT SECTION -->
+      <div class="nav-left">
+        <button class="menu-btn">☰</button>
+
+        <div class="brand"  onclick="window.location.href='index.html'">
+          <button class="brand-btn">
+            <h1 class="brand-name">ParkZo</h1>
+            <span class="brand-dots">...</span>
+            <div class="car-anim-wrapper">
+                <img src="images/carlogo.png" alt="Car Logo" class="brand-logo car-anim" />
+            </div>
+            
+          </button>
+          <p class="brand-tagline">Find Park Go!</p>
+        </div>
+      </div>
+
+      <!-- CENTER SECTION -->
+      <div class="nav-center">
+            <div class="search-wrapper">
+                <input type="text" placeholder="Search for the location..." class="search-input">
+                <button class="search-btn">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+      <!-- RIGHT SECTION -->
+      <div class="nav-right">
+        <a href="contact.html" class="nav-link">Contact</a>
+
+        <button class="icon-btn notification-btn">
+          🔔
+          
+        </button>
+        <!-- ///////////////////////////////////////////////////////////////////// -->
+      <div class="user-menu-wrapper">
+ <button class="icon-btn" id="userMenuBtn">
+  <div class="nav-avatar-ring">
+    <div class="nav-avatar-inner">
+      <img id="navUserAvatar" src="images/userlogo.png" alt="User" />
+    </div>
+  </div>
+</button>
+
+  <!-- USER DROPDOWN -->
+  
+  <div class="user-dropdown hidden" id="userDropdown">
+
+    <div class="user-dropdown-header">
+      <div class="dropdown-avatar-ring">
+        <div class="dropdown-avatar-inner">
+          <img id="dropdownUserAvatar" class="user-avatar" src="images/userlogo.png" />
+        </div>
+      </div>
+      <div>
+        <strong id="userName">Hi, User</strong><br>
+        <span id="userEmail" class="user-email"></span>
+      </div>
+    </div>
+
+    <ul class="user-dropdown-list">
+      <li>👤 Profile</li>
+      <li>💎 Membership</li>
+      <li>⚙️ Settings</li>
+      
+      <li id="logoutBtn" class="logout">🚪 Sign out</li>
+    </ul>
+
+  </div>
+</div>
+      <!-- ///////////////////////////////////////////////////////////////////// -->
+        
+        <!-- Chatbot Window -->
+<div class="chatbot hidden" id="chatbot">
+   <div class="resize-handle"></div>
+  <div class="chatbot-header">
+    <span>ParkZo Assistant</span>
+    <button id="closeChat">✕</button>
+  </div>
+
+  <div class="chatbot-messages" id="chatMessages">
+    <div class="bot-msg">
+      👋 Hi! I’m ParkZo Assistant.  
+      How can I help you today?
+    </div>
+  </div>
+
+  <div class="chatbot-input">
+    <input type="text" id="chatInput" placeholder="Ask about parking, booking, prices..." />
+    <button id="sendBtn">➤</button>
+  </div>
+
+</div>
+
+
+        
+
+      </nav>
+      </header>
+
+
+      <main>
+        <div class="booking-page">
+
+    <div class="booking-card">
+      <h2>Book Your Parking</h2>
+      <p class="subtitle">Fill the details below</p>
+
+      <form class="booking-form" id="bookingForm">
+
+        <!-- Name -->
+        <div class="form-group">
+          <label>Name of Customer</label>
+          <input type="text" id="customerName" placeholder="Enter your name" required />
+
+        </div>
+
+        <!-- Vehicle Number -->
+        <div class="form-group">
+          <label>Vehicle Number</label>
+          <input type="text" id="vehicleNumber" placeholder="KA 01 AB 1234" required />
+        </div>
+
+        <!-- Time -->
+        <div class="form-group time-group">
+          <div>
+            <label>From</label>
+            <input type="time" id="startTime" required />
+          </div>
+
+          <div>
+            <label>To</label>
+            <input type="time" id="endTime" required />
+          </div>
+        </div>
+         <!-- Date -->
+        <div class="form-group">
+          <label>Date</label>
+          <input type="date" id="bookingDate" required />
+        </div>
+
+        <!-- Vehicle Type -->
+        <div class="form-group">
+        <label>Vehicle Type</label>
+        <div class="radio-group">
+          <label>
+            <input type="radio" name="vehicleType" value="2_wheeler" required />
+            2 Wheeler
+          </label>
+
+          <label>
+            <input type="radio" name="vehicleType" value="4_wheeler" />
+            4 Wheeler
+          </label>
+        </div>
+      </div>
+
+        <!-- Location -->
+        <div class="form-group">
+          <label>Choose Location</label>
+          <select id="location" required>
+            <option value="">Select parking location</option>
+            <option>Mall Plaza Parking</option>
+            <option>City Center Garage</option>
+            <option>Metro Station Parking</option>
+          </select>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="submit-btn">
+          Next
+        </button>
+
+      </form>
+    </div>
+
+  </div>
+
+      <footer class="footer">
+  <div class="footer-container">
+
+    <div class="footer-left">
+  <div class="footer-branding">
+  <span class="footer-brand-name">ParkZo</span>
+  <span class="footer-brand-dots">...</span>
+  <img src="images/carlogo.png" alt="ParkZo car" class="footer-car">
+</div>
+
+  <p class="footer-tagline">
+    Smart, reliable parking for smarter cities.
+  </p>
+</div>
+
+    <div class="footer-right">
+      <a href="#" class="footer-link">Privacy</a>
+      <a href="#" class="footer-link">Terms</a>
+      <a href="contact.html" class="footer-link" onclick="window.location.href='contact.html'">Contact</a>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    © 2026 ParkZo. All rights reserved.
+  </div>
+
+  
+</footer>
+   <script>
+  const PRICE_PER_HOUR = {
+    "2_wheeler": 20,
+    "4_wheeler": 30
+  };
+
+  function calculateAmount(startTime, endTime, vehicleType) {
+    const start = new Date(`1970-01-01T${startTime}:00`);
+    const end = new Date(`1970-01-01T${endTime}:00`);
+
+    const diffMs = end - start;
+    const hours = diffMs / (1000 * 60 * 60);
+
+    return Math.max(1, hours) * PRICE_PER_HOUR[vehicleType];
+    }
+  </script>
+<!-- ///////////////////////////////// -->
+  <script>
+  const form = document.getElementById("bookingForm");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    // 1️⃣ GET AUTHENTICATED USER FIRST
+    const {
+      data: { user },
+      error: userError
+    } = await supabaseClient.auth.getUser();
+
+    if (userError || !user) {
+      alert("User not authenticated");
+      return;
+    }
+
+    // 2️⃣ READ FORM VALUES
+    const customerName = document.getElementById("customerName").value;
+    const vehicleNumber = document.getElementById("vehicleNumber").value;
+    const bookingDate = document.getElementById("bookingDate").value;
+    const startTime = document.getElementById("startTime").value;
+    const endTime = document.getElementById("endTime").value;
+    const vehicleType = document.querySelector('input[name="vehicleType"]:checked').value;
+    const bookingLocation = document.getElementById("location").value;
+
+    if (endTime <= startTime) {
+      alert("End time must be after start time");
+      return;
+    }
+
+    const amountPaid = calculateAmount(startTime, endTime, vehicleType);
+
+    // 3️⃣ INSERT WITH user_id (RLS SAFE)
+    const { data, error } = await supabaseClient
+      .from("parking_bookings")
+      .insert([
+        {
+          user_id: user.id, // ✅ NOW VALID
+          customer_name: customerName,
+          vehicle_number: vehicleNumber,
+          booking_date: bookingDate,
+          start_time: startTime,
+          end_time: endTime,
+          vehicle_type: vehicleType,
+          location: bookingLocation,
+          amount_paid: amountPaid,
+          payment_status: "pending"
+        }
+      ])
+      .select()
+      .single();
+
+    if (error) {
+      console.error(error);
+      alert("Booking failed");
+      return;
+    }
+
+    // 4️⃣ STORE FOR PAYMENT PREVIEW
+    sessionStorage.setItem("bookingId", data.id);
+    sessionStorage.setItem("amountPaid", amountPaid);
+    sessionStorage.setItem("bookingLocation", bookingLocation);
+    sessionStorage.setItem("timeRange", `${startTime} - ${endTime}`);
+    sessionStorage.setItem("bookingDate", bookingDate);
+
+    // 5️⃣ REDIRECT
+    // keep bookingId for receipt
+sessionStorage.setItem("receiptBookingId", data.id);
+
+// redirect to receipt page
+window.location.href = "receipt.html";
+  });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase.js"></script>
+<!-- <script src="js/auth-gate.js"></script> -->
+ <script src="js/auth.js"></script>
+      </body> 
+      </html>

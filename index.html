@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>ParkZo</title>
+  <link rel="stylesheet" href="CSS/styles.css" />
+  <link rel="stylesheet" href="CSS/auth.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+   <div id="app">
+    <!-- 🔽 ALL your existing index.html content here 🔽 -->
+    <!-- navbar, hero, quick actions, footer, everything -->
+     <header class="navbar">
+      <nav class="nav-container">
+
+      <!-- LEFT SECTION -->
+      <div class="nav-left">
+        <button class="menu-btn">☰</button>
+
+        <div class="brand"  onclick="window.location.href='index.html'">
+          <button class="brand-btn">
+            <h1 class="brand-name">ParkZo</h1>
+            <span class="brand-dots">...</span>
+            <div class="car-anim-wrapper">
+                <img src="images/carlogo.png" alt="Car Logo" class="brand-logo car-anim" />
+            </div>
+            
+          </button>
+          <p class="brand-tagline">Find Park Go!</p>
+        </div>
+      </div>
+
+      <!-- CENTER SECTION -->
+      <div class="nav-center">
+            <div class="search-wrapper">
+                <input type="text" placeholder="Search for the location..." class="search-input">
+                <button class="search-btn">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+      <!-- RIGHT SECTION -->
+      <div class="nav-right">
+        <a href="contact.html" class="nav-link">Contact</a>
+
+        <button class="icon-btn notification-btn">
+          🔔
+          
+        </button>
+
+        <div class="user-menu-wrapper">
+ <button class="icon-btn" id="userMenuBtn">
+  <div class="nav-avatar-ring">
+    <div class="nav-avatar-inner">
+      <img id="navUserAvatar" src="images/userlogo.png" alt="User" />
+    </div>
+  </div>
+</button>
+
+  <!-- USER DROPDOWN -->
+  
+  <div class="user-dropdown hidden" id="userDropdown">
+
+    <div class="user-dropdown-header">
+      <div class="dropdown-avatar-ring">
+        <div class="dropdown-avatar-inner">
+          <img id="dropdownUserAvatar" class="user-avatar" src="images/userlogo.png" />
+        </div>
+      </div>
+      <div>
+        <strong id="userName">Hi, User</strong><br>
+        <span id="userEmail" class="user-email"></span>
+      </div>
+    </div>
+
+    <ul class="user-dropdown-list">
+      <li>👤 Profile</li>
+      <li>💎 Membership</li>
+      <li>⚙️ Settings</li>
+      
+      <li id="logoutBtn" class="logout">🚪 Sign out</li>
+    </ul>
+
+  </div>
+</div>
+
+        
+        <!-- Chatbot Window -->
+<div class="chatbot hidden" id="chatbot">
+   <div class="resize-handle"></div>
+  <div class="chatbot-header">
+    <span>ParkZo Assistant</span>
+    <button id="closeChat">✕</button>
+  </div>
+
+  <div class="chatbot-messages" id="chatMessages">
+    <div class="bot-msg">
+      👋 Hi! I’m ParkZo Assistant.  
+      How can I help you today?
+    </div>
+  </div>
+
+  <div class="chatbot-input">
+    <input type="text" id="chatInput" placeholder="Ask about parking, booking, prices..." />
+    <button id="sendBtn">➤</button>
+  </div>
+
+</div>
+
+
+        
+
+      </nav>
+      </header>
+      <main>
+     <!-- /////////////////////////////// hero /////////////////////////////// -->
+      <section class="hero">
+      <div class="hero-container">
+
+      <!-- LEFT SIDE -->
+      <div class="hero-text">
+        <h1 class="hero-title">
+          Smart Parking for Smarter Cities
+        </h1>
+
+        <p class="hero-subtitle">
+          Find parking faster, reduce congestion, and save fuel using <br>
+          AI-powered smart parking solutions.
+        </p>
+
+        <div class="hero-actions">
+          <a href="dashboard.html" class="btn btn-primary">Get Started</a>
+          <a href="booking.html" class="btn btn-secondary">Instant Book </a>
+        </div>
+      </div>
+
+      <!-- RIGHT SIDE -->
+      <div class="hero-visual">
+      <div class="dashboard-preview">
+
+      <div class="dp-header">
+      Nearby Parking
+      <span class="live-indicator">
+        <span class="live-dot"></span> Live
+      </span>
+      </div>
+
+      <!-- CARD 1 -->
+      <div class="dp-card available">
+        <div class="dp-info">
+          <strong>Mall Plaza Parking</strong>
+          <p>0.2 km • ₹30/hr</p>
+
+          <div class="progress">
+            <div class="progress-fill" style="width: 58%;"></div>
+          </div>
+        </div>
+
+        <div class="status-wrap">
+          <span class="status">Available</span>
+          <span class="slots">21/50 slots left</span>
+        </div>
+      </div>
+
+      <!-- CARD 2 -->
+      <div class="dp-card limited">
+      <div class="dp-info">
+        <strong>City Center Garage</strong>
+        <p>0.5 km • ₹25/hr</p>
+
+        <div class="progress">
+          <div class="progress-fill" style="width: 90%;"></div>
+        </div>
+      </div>
+
+      <div class="status-wrap">
+        <span class="status">Limited</span>
+        <span class="slots">3/30 slots left</span>
+      </div>
+      </div>
+
+      <!-- CARD 3 -->
+      <div class="dp-card full">
+      <div class="dp-info">
+        <strong>Metro Station Parking</strong>
+        <p>1.2 km • ₹20/hr</p>
+
+        <div class="progress">
+          <div class="progress-fill" style="width: 100%;"></div>
+        </div>
+      </div>
+
+      <div class="status-wrap">
+      <span class="status">Full</span>
+      <span class="slots">0 slots left</span>
+      </div>
+      </div>
+
+      </div>
+      </div>
+
+      </div>
+      </section>
+      <!-- ///////////////////////////////Explore what ParkZo can do for you/////////////////////////////// -->
+      <section class="value-section">
+      <div class="value-container">
+
+      <p class="value-eyebrow">More than just a tool</p>
+      <h2 class="value-title">Explore what ParkZo can do for you</h2>
+
+      <div class="value-cards">
+
+      <div class="value-card">
+        <div class="value-icon blue">⏱</div>
+        <h3>Save Time</h3>
+        <p>
+          Quickly find nearby parking without roaming around the city.
+        </p>
+      </div>
+
+      <div class="value-card">
+        <div class="value-icon purple">📍</div>
+        <h3>Smart Search</h3>
+        <p>
+          Discover the best parking spots using real-time availability.
+        </p>
+      </div>
+
+      <div class="value-card">
+        <div class="value-icon red">🅿️</div>
+        <h3>Instant Booking</h3>
+        <p>
+          Reserve parking slots before you arrive and park stress-free.
+        </p>
+      </div>
+
+      <div class="value-card">
+        <div class="value-icon green">🌱</div>
+        <h3>Eco Friendly</h3>
+        <p>
+          Reduce fuel waste and congestion with efficient parking.
+        </p>
+      </div>
+
+      </div>
+
+      <a href="features.html" class="value-btn">View all features</a>
+
+       </div>
+      </section>
+      <!-- /////////////////////////////// How ParkZo Works /////////////////////////////// -->
+      <section class="how-it-works">
+        <div class="hiw-container">
+
+          <h2 class="hiw-title">How ParkZo Works</h2>
+          <p class="hiw-subtitle">
+            Find and book parking in just three simple steps
+          </p>
+
+          <div class="hiw-steps">
+
+            <!-- STEP 1 -->
+            <div class="hiw-card">
+              <svg class="hiw-ring" viewBox="0 0 320 220" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="greenGlow" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="#16a34a" />
+                    <stop offset="50%" stop-color="#22c55e" />
+                    <stop offset="100%" stop-color="#16a34a" />
+                  </linearGradient>
+                </defs>
+                <rect
+                  x="6"
+            y="6"
+            width="308"
+            height="208"
+            rx="22"
+            ry="22"
+            pathLength="1"
+          />
+        </svg>
+
+        <div class="hiw-content">
+          <div class="hiw-icon">🔍</div>
+          <h3>Search</h3>
+          <p>Search nearby parking locations based on your destination.</p>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="hiw-card">
+        <svg class="hiw-ring" viewBox="0 0 320 220" preserveAspectRatio="none">
+          <rect
+            x="6"
+            y="6"
+            width="308"
+            height="208"
+            rx="22"
+            ry="22"
+            pathLength="1"
+          />
+        </svg>
+
+        <div class="hiw-content">
+          <div class="hiw-icon">🅿️</div>
+          <h3>Book</h3>
+          <p>Select an available slot and reserve it instantly.</p>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="hiw-card">
+        <svg class="hiw-ring" viewBox="0 0 320 220" preserveAspectRatio="none">
+          <rect
+            x="6"
+            y="6"
+            width="308"
+            height="208"
+            rx="22"
+            ry="22"
+            pathLength="1"
+          />
+        </svg>
+
+        <div class="hiw-content">
+          <div class="hiw-icon">🚗</div>
+          <h3>Park</h3>
+          <p>Reach the location, park smoothly, and go stress-free.</p>
+        </div>
+      </div>
+
+        </div>
+      </div>
+        </section>
+        <!-- /////////////////////////////// Real Impact at City Scale /////////////////////////////// -->
+        <section class="impact">
+          <div class="impact-container">
+
+            <h2 class="impact-title">Real Impact at City Scale</h2>
+            <p class="impact-subtitle">
+              ParkZo delivers measurable improvements in time, cost, and congestion.
+            </p>
+
+            <div class="impact-grid">
+
+              <div class="impact-item">
+                <span class="impact-number">30%</span>
+                <p class="impact-text">
+                  Less time spent searching for parking with live availability.
+                </p>
+              </div>
+
+              <div class="impact-item">
+                <span class="impact-number">55%</span>
+                <p class="impact-text">
+                  Better utilization of existing parking spaces.
+                </p>
+              </div>
+
+            <div class="impact-item">
+          <span class="impact-number co2">
+          CO₂ <span class="co2-arrow">↓</span>
+        </span>
+          <p class="impact-text">
+            Lower fuel consumption and reduced carbon emissions.
+          </p>
+        </div>
+
+      <div class="impact-item">
+        <span class="impact-number">₹</span>
+        <p class="impact-text">
+          Reduced daily parking-related costs for drivers.
+        </p>
+      </div>
+
+      </div>
+
+     </div>
+      </section>
+      </main>
+  <!-- FOOTER (reuse existing) -->
+      <footer class="footer">
+  <div class="footer-container">
+
+    <div class="footer-left">
+  <div class="footer-branding">
+  <span class="footer-brand-name">ParkZo</span>
+  <span class="footer-brand-dots">...</span>
+  <img src="images/carlogo.png" alt="ParkZo car" class="footer-car">
+</div>
+
+  <p class="footer-tagline">
+    Smart, reliable parking for smarter cities.
+  </p>
+</div>
+
+    <div class="footer-right">
+      <a href="#" class="footer-link">Privacy</a>
+      <a href="#" class="footer-link">Terms</a>
+      <a href="contact.html" class="footer-link" onclick="window.location.href='contact.html'">Contact</a>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    © 2026 ParkZo. All rights reserved.
+  </div>
+
+  
+</footer>
+<div class="chatbot-toggle" id="chatbotToggle">
+  💬
+</div>
+<script src="js/chatbot.js"></script>
+   </div>
+<!-- ////////////////////////////////// auth overlay /////////////////////////////// -->
+
+<!-- AUTH OVERLAY -->
+<div id="authOverlay" class="auth-overlay">
+
+  <!-- LOGIN -->
+  
+    <!-- paste ONLY the login card HTML here (no <html>, no <body>) -->
+      <!-- LOGIN -->
+<div class="auth-card" id="loginCard">
+  <h2>Welcome back !</h2>
+  <p class="auth-subtext">Log in to manage your parking easily</p>
+
+  <form id="loginForm" class="auth-form">
+    <div class="input-group">
+      <label>Email</label>
+      <input type="email" placeholder="you@example.com" required>
+    </div>
+
+    <div class="input-group">
+      <label>Password</label>
+      <input type="password" id="password" placeholder="••••••••" required>
+    </div>
+
+    <div class="auth-row">
+      <label class="show-password">
+        <input type="checkbox" id="showPassword">
+        Show password
+      </label>
+      <a href="#" class="link" data-auth="forgot">Forgot password?</a>
+    </div>
+
+    <button type="submit" class="auth-btn">Log in</button>
+
+<div class="divider">OR</div>
+
+<button type="button" id="googleLoginBtn" class="auth-btn google-btn">
+  <i class="fab fa-google"></i> Continue with Google
+</button>
+  </form>
+
+  <p class="auth-footer">
+    Don’t have an account?
+    <a href="#" class="link" data-auth="signup">Create one</a>
+  </p>
+</div>
+
+  <!-- SIGNUP -->
+  <div class="auth-card hidden" id="signupCard">
+    <!-- paste ONLY signup card HTML -->
+     <h2>Create your account</h2>
+      <p class="auth-subtext">Join ParkZo and Park Smarter</p>
+
+      <form id="signupForm" class="auth-form">
+
+        <div class="input-group">
+          <label>Full Name</label>
+          <input type="text" required>
+        </div>
+
+        <div class="input-group">
+          <label>Email</label>
+          <input type="email" placeholder="you@example.com" required>
+        </div>
+
+        <div class="input-group">
+          <label>Password</label>
+          <input type="password" id="password" placeholder="••••••••" required>
+        </div>
+
+        <div class="input-group">
+          <label>Confirm Password</label>
+          <input type="password" id="confirmPassword" placeholder="••••••••" required>
+        </div>
+
+        <!-- SHOW PASSWORD (replaces Remember me) -->
+        <div class="auth-row">
+          <label class="show-password">
+            <input type="checkbox" id="showPassword">
+            Show password
+          </label>
+        </div>
+
+        <button type="submit" class="auth-btn">Sign up</button>
+
+      </form>
+
+      <p class="auth-footer">
+        Already have an account?
+        <a href="#" class="link" data-auth="login">Log in</a>
+      </p>
+      
+    </div>
+
+  <!-- FORGOT PASSWORD -->
+  <div class="auth-card hidden" id="forgotCard">
+    <!-- paste ONLY forgot password card HTML -->
+     <!-- <a href="#" data-auth="login">Back to login</a> -->
+      <h2>Forgot your password?</h2>
+      <p class="auth-subtext">
+        Enter your email and we’ll send you a reset link
+      </p>
+
+      <form id="forgotForm" class="auth-form">
+
+        <div class="input-group">
+          <label>Email</label>
+          <input type="email" id="email" required>
+        </div>
+
+        <button type="submit" class="auth-btn">
+          Send reset link
+        </button>
+
+      </form>
+
+      <p class="auth-footer">
+        Remembered your password?
+        <a href="#" class="link"  data-auth="login">Back to login</a>
+      </p>
+
+  </div>
+
+</div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.19.0/js/md5.min.js"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/auth.js"></script>
+  <!-- <script src="js/auth-gate.js"></script> -->
+
+      </body> 
+      </html>

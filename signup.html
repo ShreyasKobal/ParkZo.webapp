@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ParkZo – Sign Up</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+  
+  <main class="auth-container">
+    <div class="auth-card">
+
+      <h2>Create your account</h2>
+      <p class="auth-subtext">Join ParkZo and Park Smarter</p>
+
+      <form id="signupForm" class="auth-form">
+
+        <div class="input-group">
+          <label>Full Name</label>
+          <input type="text" required>
+        </div>
+
+        <div class="input-group">
+          <label>Email</label>
+          <input type="email" placeholder="you@example.com" required>
+        </div>
+
+        <div class="input-group">
+          <label>Password</label>
+          <input type="password" id="password" placeholder="••••••••" required>
+        </div>
+
+        <div class="input-group">
+          <label>Confirm Password</label>
+          <input type="password" id="confirmPassword" placeholder="••••••••" required>
+        </div>
+
+        <!-- SHOW PASSWORD (replaces Remember me) -->
+        <div class="auth-row">
+          <label class="show-password">
+            <input type="checkbox" id="showPassword">
+            Show password
+          </label>
+        </div>
+
+        <button type="submit" class="auth-btn">Sign up</button>
+
+      </form>
+
+      <p class="auth-footer">
+        Already have an account?
+        <a href="index.html" class="link">Log in</a>
+      </p>
+      
+    </div>
+  </main>
+
+ <script src="js/auth.js"></script>
+
+
+</body>
+</html>

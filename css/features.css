@@ -1,0 +1,637 @@
+
+
+body {
+  background-color: #ffffff;
+}
+
+
+/* ================= NAVBAR ================= */
+/* NAVBAR */
+.navbar {
+  background-color: #1a1a2e;
+  padding: 14px 16px;
+  height: 70px;
+  position: relative;
+  z-index: 10;
+}
+
+.nav-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+/* LEFT */
+.nav-left {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 13px;
+}
+
+.menu-btn {
+  font-size: 26px;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  font-family: sans-serif;
+  
+}
+
+.brand-btn {
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.brand-name {
+  font-size: 26px;
+  font-weight: bold;
+  color: #ffc107;
+  
+}
+
+.brand-dots {
+  font-size: 26px;
+  font-weight: bold;
+  color: white;;
+  font-family: 'Times New Roman, Times, serif;';
+}
+
+.brand-logo {
+  width: 60px;
+  
+}
+
+.brand-tagline {
+  font-family: sans-serif;
+  font-size: 10px;
+  font-weight: bold;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-left: 1px;
+}
+
+/* ================= NAVBAR CAR INTRO ANIMATION ================= */
+
+.car-anim-wrapper {
+  .car-anim-wrapper {
+  position: relative;
+  z-index: 50; /* higher than search & icons */
+  pointer-events: none; /* important */
+}
+}
+
+.car-anim {
+  position: relative;
+  z-index: 51;
+  animation: car-run-once 4s ease-in-out 1 forwards;
+}
+
+@keyframes car-run-once {
+  /* Start hidden behind "P" */
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  /* Appear */
+  8% {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* Drive across navbar */
+  60% {
+    transform: translateX(1600px);
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* Exit screen */
+  68% {
+    transform: translateX(1600px);
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  /* FAST invisible return */
+  75% {
+    transform: translateX(-100%);
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  /* Settle quickly */
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+/* CENTER */
+.nav-center {
+  flex: 1;
+  max-width: 600px;
+  
+}
+
+.nav-center:hover {
+  flex: 1;
+  max-width: 600px;
+  box-shadow: inset ;
+  border-inline-start: 40px;
+  border-width: px;
+}
+.search-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 600px;
+    background-color: white;
+    border-radius: 999px; /* Pill shape from image_c59420.png */
+    overflow: hidden; /* Clips the button corners to the pill shape */
+    border: 1px solid #000;
+}
+
+/* Updated Search Input */
+.search-input {
+    flex: 1; /* Takes up all available space */
+    padding: 12px 20px;
+    border: none; /* Border is now on the wrapper */
+    outline: none;
+    font-size: 16px;
+}
+
+.search-wrapper {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  border-radius: 999px; /* Pill shape */
+  overflow: hidden; /* Ensures button corners are curved */
+  border: 1px solid #000;
+  width: 100%;
+  max-width: 600px;
+  position: relative;
+}
+
+/* Updated Search Input */
+.search-input {
+  flex: 1;
+  padding: 12px 20px;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 16px;
+  /* Ensures the ring curves correctly on the left */
+  border-radius: 999px 0 0 999px; 
+}
+
+/* Black Internal Ring on Focus */
+.search-input:focus {
+  /* box-shadow follows the border-radius curves perfectly */
+  box-shadow: inset 4px 4px 0 0 black, inset -4px -4px 0 0 black;
+  /* Or use a simpler full inset for a complete ring: */
+  box-shadow: inset 0 0 0 4px black;
+}
+
+/* Yellow Search Button on the Right */
+.search-btn {
+  background-color: rgb(255, 255, 255); /* Parkzo Yellow */
+  border: none;
+  height: 45px; /* Adjust based on your navbar height */
+  padding: 0 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-btn:hover {
+  background-color: rgb(203, 197, 197); /* Parkzo Yellow */
+  border: none;
+  height: 45px; /* Adjust based on your navbar height */
+  transition: background-color 0.3s ease;
+}
+
+.search-btn i {
+  color: #1a1a2e; /* Dark icon for contrast */
+  font-size: 18px;
+}
+
+/* THE CLICK EFFECT */
+.search-input:focus {
+  /* Multi-layered inset shadow for the double-ring look */
+  box-shadow: inset 0 0 0 2px white, inset 0 0 0 4px black;
+  border-color: black;
+}
+/* RIGHT */
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.nav-link {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.nav-link:hover {
+  background: none;
+  border: none;
+  color: rgb(203, 197, 197);
+  font-size: 16px;
+  cursor: pointer;
+}
+
+
+.icon-btn {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  position: relative;
+}
+
+.icon-btn img {
+  width: 40px;
+}
+
+/* NOTIFICATION DOT */
+.notification-dot {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 8px;
+  height: 8px;
+  background-color: red;
+  border-radius: 50%;
+}
+
+
+.hero {
+  background-color: #f5f6fa;   /* light gray */
+  padding-top: 40px;           /* tight to navbar */
+  padding-bottom: 80px;        /* breathing room */
+}
+
+.hero-container {
+  max-width: 1200px;
+  margin: 0 auto;              /* center horizontally */
+  padding: 0 40px;             /* left-right spacing */
+  display: flex;
+  align-items: center;
+  gap: 60px;
+}
+
+/* LEFT CONTENT */
+.hero-text {
+  flex: 1;
+}
+
+.hero-title {
+  font-size: 48px;
+  color: #1a1a2e;
+  margin-bottom: 20px;
+}
+
+.hero-subtitle {
+  font-size: 18px;
+  color: #444;
+  line-height: 1.6;
+  margin-bottom: 32px;
+}
+
+/* BUTTONS */
+.hero-actions {
+  display: flex;
+  gap: 16px;
+}
+
+.btn {
+  padding: 14px 28px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.btn-primary {
+  border: 2px solid #1a1a2e;
+  background-color: white;
+  color: #1a1a2e;
+}
+
+.btn-primary:hover {
+  background-color: #1a1a2e;
+  color: rgb(255, 255, 255);
+}
+
+.btn-secondary {
+  border: 2px solid #1a1a2e;
+  color: #1a1a2e;
+}
+
+.btn-secondary:hover {
+  color: white;
+  background-color: #1a1a2e;
+}
+/* RIGHT IMAGE */
+.hero-visual {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+/* ================= FEATURES ================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: system-ui, sans-serif;
+}
+
+body {
+  background: #fafafa;
+  color: #0f172a;
+}
+
+/* HERO */
+.features-hero {
+  padding: 60px 20px 40px;
+  text-align: center;
+}
+
+.eyebrow {
+  font-size: 14px;
+  color: #64748b;
+  margin-bottom: 10px;
+}
+
+.features-hero h1 {
+  font-size: 42px;
+  margin-bottom: 14px;
+}
+
+.hero-subtext {
+  max-width: 600px;
+  margin: 0 auto;
+  font-size: 18px;
+  color: #475569;
+}
+
+/* CONTENT */
+.features-wrapper {
+  max-width: 1100px;
+  margin: auto;
+  padding: 20px 20px 40px;
+}
+
+.feature-group {
+  margin-bottom: 40px;
+}
+
+.feature-group h2 {
+  font-size: 28px;
+  margin-bottom: 24px;
+}
+
+.feature-card {
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 24px;
+  margin-bottom: 18px;
+}
+
+
+
+
+.feature-bottom-card {
+  background: #fafafa;
+  font-size: 30px;
+  text-align: center;
+  margin-bottom: 14px;
+  border-radius: 14px;
+  padding: 24px;
+  margin-bottom: 0px;
+}
+
+.feature-card h3 {
+  font-size: 20px;
+  margin-bottom: 12px;
+}
+
+.feature-card ul {
+  list-style: none;
+}
+
+.feature-card li {
+  color: #475569;
+  margin-bottom: 8px;
+}
+
+/* CTA */
+.features-cta {
+  background: #0f172a;
+  color: white;
+  text-align: center;
+  padding: 70px 20px;
+}
+ 
+.cta-btn {
+  display: inline-block;
+  margin-top: 20px;
+  border: 2px solid #1a1a2e;
+  background-color: white;
+  color: #1a1a2e; 
+  font-style: bold;
+  font-size: 21px;
+  padding: 12px 26px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 650;
+}
+
+.cta-btn:hover {
+  background-color: #ffc107; /* ParkZo yellow */
+  color: #1a1a2e;
+  font-style: bold;
+  border-color: #1a1a2e;
+}
+
+/* ================= FOOTER ================= */
+
+.footer {
+  background-color: #1a1a2e;
+  color: #ffffff;
+  padding: 60px 40px 30px;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+
+/* Left */
+.footer-brand {
+  font-size: 22px;
+  font-weight: 700;
+  color: #ffc107;
+  margin-bottom: 8px;
+}
+.footer-dots {
+  font-size: 22px;
+  font-weight: 700;
+  color: white;;
+  font-family: 'Times New Roman, Times, serif'};
+
+.footer-tagline {
+  font-size: 14px;
+  color: #cbd5e1;
+  max-width: 320px;
+}
+
+/* Right */
+.footer-right {
+  display: flex;
+  gap: 24px;
+}
+
+.footer-link {
+  font-size: 14px;
+  color: #cbd5e1;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-link:hover {
+  color: #ffffff;
+}
+
+/* Bottom */
+.footer-bottom {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+/* Footer branding (navbar-style) */
+.footer-branding {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.footer-brand-name {
+  font-size: 22px;
+  font-weight: 700;
+  color: #ffc107; /* ParkZo yellow */
+}
+
+.footer-brand-dots {
+  font-size: 22px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.footer-brand-logo {
+  width: 50px;
+  height: auto;
+}
+
+/* ===== FOOTER SINGLE-CAR ANIMATION (FINAL) ===== */
+
+.footer {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Branding container */
+.footer-branding {
+  position: relative;
+}
+
+/* The SAME car inside branding */
+.footer-car {
+  width: 50px;
+  position: relative;
+  z-index: 50;            /* above footer links */
+  pointer-events: none;  /* links stay clickable */
+  animation: footerCarRun 7s infinite ease-in-out;
+}
+
+/* One-time animation */
+@keyframes footerCarRun {
+  /* Normal position (after dots) */
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* Drive straight across footer */
+  60% {
+    transform: translateX(1400px);
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* Exit footer */
+  70% {
+    transform: translateX(1400px);
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  /* Invisible return */
+  90% {
+    transform: translateX(0);
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  /* Final resting position */
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+.footer-col h4 {
+  font-size: 16px;
+  margin-bottom: 16px;
+  color: #ffffff;
+}
+
+.footer-col a {
+  display: block;
+  margin-bottom: 10px;
+  color: #cbd5e1;
+  text-decoration: none;
+  font-size: 14px;
+}

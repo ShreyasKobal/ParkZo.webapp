@@ -1,0 +1,81 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background-color: #f5f6fa;
+}
+
+/* Page center */
+.preview-page {
+  min-height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Card */
+.preview-card {
+  width: 420px;
+  background-color: #ffffff;
+  border-radius: 14px;
+  padding: 28px;
+  border: 1px solid #000;
+}
+
+.preview-card h2 {
+  margin-bottom: 22px;
+  color: #1a1a2e;
+}
+
+/* Rows */
+.preview-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.preview-row:last-of-type {
+  border-bottom: none;
+}
+
+.label {
+  font-size: 14px;
+  color: #555;
+  font-weight: 600;
+}
+
+.value {
+  font-size: 14px;
+  color: #111;
+  font-weight: 600;
+}
+
+/* Price highlight */
+.preview-row.price .value {
+  color: #16a34a;
+  font-size: 16px;
+}
+
+/* Button */
+.pay-btn {
+  width: 100%;
+  margin-top: 26px;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  background-color: #1a1a2e;
+  color: white;
+  border: 2px solid #000;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.pay-btn:hover {
+  background-color: white;
+  color: #1a1a2e;
+}

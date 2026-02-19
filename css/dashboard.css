@@ -1,0 +1,543 @@
+/* ================= PARKZO QUICK ACTIONS ================= */
+
+.quick-actions {
+  padding: 70px 40px;
+  background-color: #f2f2f2;
+}
+
+.qa-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.qa-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 6px;
+  text-align: center;
+}
+
+.qa-subtitle {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 36px;
+   text-align: center;
+}
+
+/* Grid */
+.qa-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+/* Card (clickable link) */
+.qa-card {
+  text-decoration: none;
+  background-color: #ffffff;
+  border-radius: 14px;
+  padding: 22px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  border: 1px solid #d1d5db;
+  cursor: pointer;
+  
+
+  /* premium animation */
+  transition:
+    transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.35s ease;
+}
+
+/* Hover effect */
+.qa-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  border-color: #1a1a2e;
+}
+
+/* Icon */
+.qa-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  background-color: #1a1a2e;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+
+  transition:
+    transform 0.35s ease,
+    background-color 0.35s ease;
+}
+
+/* Icon animation */
+.qa-card:hover .qa-icon {
+  transform: scale(1.1) rotate(-2deg);
+  background-color: #111827;
+}
+
+/* Content */
+.qa-content h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 6px;
+}
+
+.qa-content p {
+  font-size: 13px;
+  color: #555;
+  line-height: 1.4;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .qa-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .qa-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ================= OTHER PAGES (DASHBOARD, BOOKING, PAYMENT PREVIEW) ================= */
+/* ================= QUICK ACTION CARD ================= */
+
+.qa-card {
+  position: relative;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border: #1a1a2e 2px solid;
+}
+.qa-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 45px rgba(55, 212, 107, 0.5);
+  
+}
+
+/* ================= QUICK ACTION CONTENT ================= */
+
+.qa-content {
+  position: relative;
+  z-index: 2;
+}
+
+.qa-icon {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+}
+
+/* SVG wrapper */
+.icon-ring {
+  position: absolute;
+  inset: -6px;
+  width: calc(100% + 12px);
+  height: calc(100% + 12px);
+  pointer-events: none;
+}
+
+/* THE ACTUAL ANIMATION */
+.icon-ring circle {
+  fill: none;
+  stroke: #44d437;
+  stroke-width: 8;
+  stroke-linecap: round;
+
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  opacity: 0;
+
+  filter: drop-shadow(0 0 6px rgba(55, 212, 60, 0.6));
+
+  transition:
+    stroke-dashoffset 0.6s ease,
+    opacity 0.15s ease;
+}
+ 
+/* CLOCKWISE DRAW ON HOVER */
+.qa-card:hover .icon-ring circle {
+  stroke-dashoffset: 0;
+  opacity: 60%;
+}
+
+/* ================= SVG RING (SAME AS HIW) ================= */
+
+.qa-ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.qa-ring rect {
+  fill: none;
+  stroke: #d4af37;
+  stroke-width: 2;
+  stroke-linecap: round;
+
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  opacity: 0;
+
+  filter: drop-shadow(0 0 4px rgba(212, 175, 55, 0.45));
+
+  transition:
+    stroke-dashoffset 0.6s ease 0.15s,
+    opacity 0.15s ease 0.15s;
+}
+
+/* Hover draw animation (IDENTICAL behavior) */
+.qa-card:hover .qa-ring path {
+  stroke-dashoffset: 0;
+  opacity: 1;
+}
+
+.qa-card:not(:hover) .qa-ring path {
+  stroke-dashoffset: 235;
+}
+
+/* ================= LIVE SNAPSHOT ================= */
+
+.live-snapshot {
+  padding: 60px 40px;
+  background-color: #ffffff;
+}
+
+.ls-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.ls-title {
+  font-size: 28px;
+  color: #1a1a2e;
+  margin-bottom: 6px;
+}
+
+.ls-subtitle {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 30px;
+}
+
+/* Card */
+.ls-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  background: #f9fafb;
+  border-radius: 16px;
+  padding: 24px 28px;
+
+  border: 1px solid #e5e7eb;
+}
+
+/* Left */
+.ls-left h3 {
+  font-size: 18px;
+  color: #1a1a2e;
+  margin-bottom: 4px;
+}
+
+.ls-distance {
+  font-size: 13px;
+  color: #6b7280;
+  margin-bottom: 14px;
+}
+
+.ls-meta {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.ls-status {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.ls-status.available {
+  color: #16a34a;
+}
+
+.ls-price {
+  font-size: 13px;
+  color: #374151;
+}
+
+/* Right */
+.ls-right {
+  min-width: 220px;
+}
+
+.ls-bar {
+  height: 8px;
+  background: #e5e7eb;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+.ls-fill {
+  height: 100%;
+  background: #16a34a;
+  border-radius: 6px;
+}
+
+.ls-bar-label {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+
+/* ================= TRUST STRIP ================= */
+
+.trust-strip {
+  padding: 40px;
+  background: #f2f2f2;
+}
+
+.ts-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.ts-item {
+  font-size: 14px;
+  color: #1a1a2e;
+  opacity: 0.85;
+}
+
+
+/* ================= PARKZO HIGHLIGHTS ================= */
+
+.parkzo-highlights {
+  padding: 70px 40px;
+  background: white;
+}
+
+.ph-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.ph-title {
+  font-size: 28px;
+  color: #1a1a2e;
+  margin-bottom: 6px;
+}
+
+.ph-subtitle {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 40px;
+}
+
+/* Grid */
+.ph-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+/* Banner cards */
+.ph-card {
+  position: relative;
+  padding: 28px 26px;
+  border-radius: 18px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+
+
+/* Badge */
+.ph-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  color: #ffffff;
+  background: #1a1a2e;
+  padding: 4px 10px;
+  border-radius: 999px;
+  margin-bottom: 14px;
+}
+
+/* Text */
+.ph-card h3 {
+  font-size: 18px;
+  color: #1a1a2e;
+  margin-bottom: 10px;
+}
+
+.ph-card p {
+  font-size: 14px;
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+/* ================= AROUND YOU ================= */
+
+.around-you {
+  padding: 70px 40px;
+  background: #f2f2f2;
+}
+
+.ay-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.ay-title {
+  font-size: 28px;
+  color: #1a1a2e;
+  margin-bottom: 6px;
+}
+
+.ay-subtitle {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 36px;
+}
+
+/* Grid */
+.ay-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+/* Cards */
+.ay-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 26px 24px;
+  border: #e5e7eb 2px solid;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  
+}
+
+/* .ay-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
+} */
+
+/* Tags */
+.ay-tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  margin-bottom: 14px;
+  color: #ffffff;
+}
+
+.ay-tag.green { background: #16a34a; }
+.ay-tag.yellow { background: #f59e0b; }
+.ay-tag.blue { background: #2563eb; }
+
+/* Text */
+.ay-card h3 {
+  font-size: 18px;
+  color: #1a1a2e;
+  margin-bottom: 10px;
+}
+
+.ay-card p {
+  font-size: 14px;
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+/* ================= PARKING IMAGE GALLERY ================= */
+
+.parking-gallery {
+  padding: 70px 40px;
+  background: #ffffff;
+}
+
+.pg-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.pg-title {
+  font-size: 28px;
+  color: #1a1a2e;
+  margin-bottom: 6px;
+}
+
+.pg-subtitle {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 40px;
+}
+
+/* Grid */
+.pg-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
+/* Card */
+.pg-card {
+  border-radius: 18px;
+  overflow: hidden;
+  background: #f9fafb;
+  border: #1a1a2e 2px solid;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+  cursor: pointer;
+}
+
+.pg-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.12);
+}
+
+/* Image */
+.pg-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+/* Info */
+.pg-info {
+  padding: 16px 18px;
+}
+
+.pg-info h3 {
+  font-size: 16px;
+  color: #1a1a2e;
+  margin-bottom: 6px;
+}
+
+.pg-info span {
+  font-size: 13px;
+  color: #6b7280;
+}
