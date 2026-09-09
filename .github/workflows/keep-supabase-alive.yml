@@ -2,16 +2,18 @@ name: Keep Supabase Alive
 
 on:
   schedule:
-    - cron: "0 6 */3 * *"
-  workflow_dispatch: {}
+    # Runs every day at 6:00 AM UTC — daily, to leave a wide safety
+    # margin against GitHub's scheduling delays on low-activity repos.
+    - cron: "0 6 * * *"
+  workflow_dispatch: {} # lets you manually trigger it from the Actions tab too
 
 jobs:
   ping-supabase:
     runs-on: ubuntu-latest
     steps:
-      - name: Ping Supabase REST endpoint
+      - name: Query Supabase table (real DB activity)
         run: |
           curl -s -o /dev/null -w "%{http_code}" \
-            "${{ secrets.SUPABASE_URL }}/rest/v1/" \
+            "${{ secrets.SUPABASE_URL }}/rest/v1/profiles?select=id&limit=1" \
             -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
             -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}"
