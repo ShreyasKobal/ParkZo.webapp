@@ -1,4 +1,5 @@
 import Script from "next/script";
+import { AuthProvider } from "../lib/auth/AuthProvider";
 
 // Reusing the EXISTING css files directly (not copies) so styling stays
 // byte-for-byte identical to the current site during Phase 1.
@@ -21,7 +22,7 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body>
-        {children}
+        <AuthProvider>{children}</AuthProvider>
 
         {/*
           blueimp-md5 is loaded the same way the existing site loads it

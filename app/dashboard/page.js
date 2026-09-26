@@ -1,20 +1,19 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { supabaseClient } from "../../lib/supabaseClient";
+import { useAuth } from "../../lib/auth/useAuth";
+import Navbar from "../../components/Navbar";
 import "../../css/dashboard.css";
 
 export default function Dashboard() {
-  // Refs mirror the getElementById() calls in the original js/auth.js,
-  // js/auth-gate.js, and js/chatbot.js
-  const userNameRef = useRef(null);
-  const userEmailRef = useRef(null);
-  const navAvatarRef = useRef(null);
-  const dropdownAvatarRef = useRef(null);
-  const userMenuBtnRef = useRef(null);
-  const userDropdownRef = useRef(null);
-  const logoutBtnRef = useRef(null);
+  const { user, loading } = useAuth();
+  const router = useRouter();
 
+  // Chatbot refs — ported from js/chatbot.js, unchanged and out of scope
+  // for this auth/navigation refactor.
   const chatbotToggleRef = useRef(null);
   const chatbotRef = useRef(null);
   const closeChatRef = useRef(null);
@@ -23,101 +22,15 @@ export default function Dashboard() {
   const chatMessagesRef = useRef(null);
   const resizeHandleRef = useRef(null);
 
+  // Protected route: send logged-out visitors to /login, remembering where
+  // they were headed so login can return them here afterwards.
   useEffect(() => {
-    let cancelled = false;
-
-    // ===================== AUTH GATE (ported from js/auth-gate.js) =====================
-    // Original redirected unauthenticated users to "index.html". That file
-    // still exists but isn't served correctly from inside this Next.js app,
-    // so this redirects to "/" instead — the already-migrated equivalent.
-    async function protectPage() {
-      const { data } = await supabaseClient.auth.getUser();
-      if (cancelled) return;
-      if (!data.user) {
-        window.location.href = "/";
-      }
+    if (!loading && !user) {
+      router.replace("/login?next=/dashboard");
     }
+  }, [loading, user, router]);
 
-    // ===================== NAVBAR PROFILE (ported from js/auth.js) =====================
-    // Note: dashboard.html has no #app/#authOverlay/#loginCard elements, so
-    // the original updateAuthUI()'s lockScreen()/unlockScreen()/showOnly()
-    // calls were always no-ops here — omitted rather than faked. The one
-    // real effect on this page is loading the profile into the navbar.
-    function getGravatarUrl(email) {
-      const trimmedEmail = email.trim().toLowerCase();
-      const hash =
-        typeof window !== "undefined" && window.md5
-          ? window.md5(trimmedEmail)
-          : "";
-      return `https://www.gravatar.com/avatar/${hash}?s=200&d=identicon`;
-    }
-
-    async function loadUserProfile() {
-      const {
-        data: { user },
-      } = await supabaseClient.auth.getUser();
-      if (!user) return;
-
-      const nameEl = userNameRef.current;
-      const emailEl = userEmailRef.current;
-      const navAvatar = navAvatarRef.current;
-      const dropdownAvatar = dropdownAvatarRef.current;
-
-      if (nameEl) {
-        const fullName =
-          user.user_metadata?.full_name || user.user_metadata?.name || "User";
-        nameEl.textContent = `Hi, ${fullName}`;
-      }
-      if (emailEl) {
-        emailEl.textContent = user.email;
-      }
-
-      let avatarUrl;
-      if (user.user_metadata?.avatar_url) {
-        avatarUrl = user.user_metadata.avatar_url;
-      } else {
-        avatarUrl = getGravatarUrl(user.email);
-      }
-      if (navAvatar) navAvatar.src = avatarUrl;
-      if (dropdownAvatar) dropdownAvatar.src = avatarUrl;
-    }
-
-    async function updateAuthUI() {
-      const { data } = await supabaseClient.auth.getUser();
-      if (data.user) {
-        loadUserProfile();
-      }
-      // Preserved existing quirk: if there's no user here (e.g. right after
-      // logout), nothing redirects or shows a login form on this page —
-      // that matches current live behavior exactly, not fixed here.
-    }
-
-    protectPage();
-    updateAuthUI();
-
-    // User dropdown toggle (same as js/auth.js)
-    const userMenuBtn = userMenuBtnRef.current;
-    const userDropdown = userDropdownRef.current;
-    function handleUserMenuClick(e) {
-      e.stopPropagation();
-      if (userDropdown) userDropdown.classList.toggle("hidden");
-    }
-    function handleDocumentClickForDropdown() {
-      if (userDropdown) userDropdown.classList.add("hidden");
-    }
-    if (userMenuBtn && userDropdown) {
-      userMenuBtn.addEventListener("click", handleUserMenuClick);
-      document.addEventListener("click", handleDocumentClickForDropdown);
-    }
-
-    // Logout (same as js/auth.js — preserved quirk: no redirect after logout)
-    const logoutBtn = logoutBtnRef.current;
-    async function handleLogoutClick() {
-      await supabaseClient.auth.signOut();
-      updateAuthUI();
-    }
-    if (logoutBtn) logoutBtn.addEventListener("click", handleLogoutClick);
-
+  useEffect(() => {
     // ===================== CHATBOT (ported from js/chatbot.js) =====================
     const toggleBtn = chatbotToggleRef.current;
     const chatbot = chatbotRef.current;
@@ -208,14 +121,7 @@ export default function Dashboard() {
     document.addEventListener("mousemove", handleResizeMouseMove);
     document.addEventListener("mouseup", handleResizeMouseUp);
 
-    // ===================== CLEANUP =====================
     return () => {
-      cancelled = true;
-      if (userMenuBtn)
-        userMenuBtn.removeEventListener("click", handleUserMenuClick);
-      document.removeEventListener("click", handleDocumentClickForDropdown);
-      if (logoutBtn)
-        logoutBtn.removeEventListener("click", handleLogoutClick);
       if (toggleBtn) toggleBtn.removeEventListener("click", openChat);
       if (closeChat) closeChat.removeEventListener("click", closeChatWindow);
       if (sendBtn) sendBtn.removeEventListener("click", sendMessage);
@@ -228,152 +134,23 @@ export default function Dashboard() {
     };
   }, []);
 
+  // While auth state is resolving, or while redirecting a logged-out
+  // visitor away, show a minimal shell instead of the real dashboard
+  // content — never flash it to someone who isn't logged in.
+  if (loading || !user) {
+    return (
+      <>
+        <Navbar />
+        <main style={{ padding: "80px 40px", textAlign: "center" }}>
+          <p>Loading…</p>
+        </main>
+      </>
+    );
+  }
+
   return (
     <>
-      <header className="navbar">
-        <nav className="nav-container">
-          {/* LEFT SECTION */}
-          <div className="nav-left">
-            <button className="menu-btn">☰</button>
-
-            <div
-              className="brand"
-              onClick={() => {
-                window.location.href = "/";
-              }}
-            >
-              <button className="brand-btn">
-                <h1 className="brand-name">ParkZo</h1>
-                <span className="brand-dots">...</span>
-                <div className="car-anim-wrapper">
-                  <img
-                    src="/images/carlogo.png"
-                    alt="Car Logo"
-                    className="brand-logo car-anim"
-                  />
-                </div>
-              </button>
-              <p className="brand-tagline">Find Park Go!</p>
-            </div>
-          </div>
-
-          {/* CENTER SECTION */}
-          <div className="nav-center">
-            <div className="search-wrapper">
-              <input
-                type="text"
-                placeholder="Search for the location..."
-                className="search-input"
-              />
-              <button className="search-btn">
-                <i className="fas fa-search"></i>
-              </button>
-            </div>
-          </div>
-
-          {/* RIGHT SECTION */}
-          <div className="nav-right">
-            <a href="contact.html" className="nav-link">
-              Contact
-            </a>
-
-            <button className="icon-btn notification-btn">🔔</button>
-
-            <div className="user-menu-wrapper">
-              <button
-                className="icon-btn"
-                id="userMenuBtn"
-                ref={userMenuBtnRef}
-              >
-                <div className="nav-avatar-ring">
-                  <div className="nav-avatar-inner">
-                    <img
-                      id="navUserAvatar"
-                      ref={navAvatarRef}
-                      src="/images/userlogo.png"
-                      alt="User"
-                    />
-                  </div>
-                </div>
-              </button>
-
-              {/* USER DROPDOWN */}
-              <div
-                className="user-dropdown hidden"
-                id="userDropdown"
-                ref={userDropdownRef}
-              >
-                <div className="user-dropdown-header">
-                  <div className="dropdown-avatar-ring">
-                    <div className="dropdown-avatar-inner">
-                      <img
-                        id="dropdownUserAvatar"
-                        ref={dropdownAvatarRef}
-                        className="user-avatar"
-                        src="/images/userlogo.png"
-                        alt=""
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <strong id="userName" ref={userNameRef}>
-                      Hi, User
-                    </strong>
-                    <br />
-                    <span
-                      id="userEmail"
-                      ref={userEmailRef}
-                      className="user-email"
-                    ></span>
-                  </div>
-                </div>
-
-                <ul className="user-dropdown-list">
-                  <li>👤 Profile</li>
-                  <li>💎 Membership</li>
-                  <li>⚙️ Settings</li>
-                  <li id="logoutBtn" ref={logoutBtnRef} className="logout">
-                    🚪 Sign out
-                  </li>
-                </ul>
-              </div>
-            </div>
-
-            {/* Chatbot Window */}
-            <div className="chatbot hidden" id="chatbot" ref={chatbotRef}>
-              <div className="resize-handle" ref={resizeHandleRef}></div>
-              <div className="chatbot-header">
-                <span>ParkZo Assistant</span>
-                <button id="closeChat" ref={closeChatRef}>
-                  ✕
-                </button>
-              </div>
-
-              <div
-                className="chatbot-messages"
-                id="chatMessages"
-                ref={chatMessagesRef}
-              >
-                <div className="bot-msg">
-                  👋 Hi! I’m ParkZo Assistant. How can I help you today?
-                </div>
-              </div>
-
-              <div className="chatbot-input">
-                <input
-                  type="text"
-                  id="chatInput"
-                  ref={chatInputRef}
-                  placeholder="Ask about parking, booking, prices..."
-                />
-                <button id="sendBtn" ref={sendBtnRef}>
-                  ➤
-                </button>
-              </div>
-            </div>
-          </div>
-        </nav>
-      </header>
+      <Navbar />
 
       {/* ================= QUICK ACTIONS ================= */}
       <section className="quick-actions">
@@ -382,7 +159,10 @@ export default function Dashboard() {
           <p className="qa-subtitle">Book faster using your parking shortcuts</p>
 
           <div className="qa-grid">
-            {/* AI Suggestions */}
+            {/* AI Suggestions — no /ai-suggestions route exists yet.
+                Deferred to Phase 2 per instructions; left as a plain,
+                still-non-functional .html link rather than inventing a
+                fake route. */}
             <a href="ai-suggestions.html" className="qa-card">
               <svg
                 className="qa-ring"
@@ -413,7 +193,7 @@ export default function Dashboard() {
             </a>
 
             {/* Instant Book */}
-            <a href="booking.html" className="qa-card">
+            <Link href="/booking" className="qa-card">
               <svg
                 className="qa-ring"
                 viewBox="0 0 100 100"
@@ -440,10 +220,10 @@ export default function Dashboard() {
                 <h3>Instant Book</h3>
                 <p>Quickly reserve your last used spot</p>
               </div>
-            </a>
+            </Link>
 
             {/* Book for Friend */}
-            <a href="booking.html" className="qa-card">
+            <Link href="/booking" className="qa-card">
               <svg
                 className="qa-ring"
                 viewBox="0 0 100 100"
@@ -470,9 +250,11 @@ export default function Dashboard() {
                 <h3>Book for Friend</h3>
                 <p>Reserve parking for someone else</p>
               </div>
-            </a>
+            </Link>
 
-            {/* Favorites */}
+            {/* Favorites — no /favorites route exists yet. Deferred to
+                Phase 2 per instructions; left as a plain, still-non-
+                functional .html link rather than inventing a fake route. */}
             <a href="favorites.html" className="qa-card">
               <svg
                 className="qa-ring"
@@ -649,15 +431,9 @@ export default function Dashboard() {
             <a href="#" className="footer-link">
               Terms
             </a>
-            <a
-              href="contact.html"
-              className="footer-link"
-              onClick={() => {
-                window.location.href = "contact.html";
-              }}
-            >
+            <Link href="/contact" className="footer-link">
               Contact
-            </a>
+            </Link>
           </div>
         </div>
 
@@ -670,6 +446,39 @@ export default function Dashboard() {
         ref={chatbotToggleRef}
       >
         💬
+      </div>
+
+      {/* Chatbot Window */}
+      <div className="chatbot hidden" id="chatbot" ref={chatbotRef}>
+        <div className="resize-handle" ref={resizeHandleRef}></div>
+        <div className="chatbot-header">
+          <span>ParkZo Assistant</span>
+          <button id="closeChat" ref={closeChatRef}>
+            ✕
+          </button>
+        </div>
+
+        <div
+          className="chatbot-messages"
+          id="chatMessages"
+          ref={chatMessagesRef}
+        >
+          <div className="bot-msg">
+            👋 Hi! I’m ParkZo Assistant. How can I help you today?
+          </div>
+        </div>
+
+        <div className="chatbot-input">
+          <input
+            type="text"
+            id="chatInput"
+            ref={chatInputRef}
+            placeholder="Ask about parking, booking, prices..."
+          />
+          <button id="sendBtn" ref={sendBtnRef}>
+            ➤
+          </button>
+        </div>
       </div>
     </>
   );

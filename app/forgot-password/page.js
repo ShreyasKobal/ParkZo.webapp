@@ -38,7 +38,7 @@ export default function ForgotPasswordPage() {
 
         <p className="auth-footer">
           Remembered your password?{" "}
-          <a href="/" className="link">
+          <a href="/login" className="link">
             Back to login
           </a>
         </p>

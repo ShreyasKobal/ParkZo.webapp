@@ -113,7 +113,7 @@ export default function SignupPage() {
 
         <p className="auth-footer">
           Already have an account?{" "}
-          <a href="/" className="link">
+          <a href="/login" className="link">
             Log in
           </a>
         </p>
