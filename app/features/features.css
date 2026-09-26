@@ -1,0 +1,104 @@
+/* Route-local styles for /features only.
+   Extracted from the original css/features.css, excluding:
+   - the duplicated navbar/hero/footer rules (already provided globally by
+     css/styles.css via app/layout.js)
+   - the malformed stray-brace footer section (not needed here either way)
+   The original css/features.css and css/styles.css are untouched. */
+
+.features-hero {
+  padding: 60px 20px 40px;
+  text-align: center;
+}
+
+.eyebrow {
+  font-size: 14px;
+  color: #64748b;
+  margin-bottom: 10px;
+}
+
+.features-hero h1 {
+  font-size: 42px;
+  margin-bottom: 14px;
+}
+
+.hero-subtext {
+  max-width: 600px;
+  margin: 0 auto;
+  font-size: 18px;
+  color: #475569;
+}
+
+.features-wrapper {
+  max-width: 1100px;
+  margin: auto;
+  padding: 20px 20px 40px;
+}
+
+.feature-group {
+  margin-bottom: 40px;
+}
+
+.feature-group h2 {
+  font-size: 28px;
+  margin-bottom: 24px;
+}
+
+.feature-card {
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 24px;
+  margin-bottom: 18px;
+}
+
+.feature-bottom-card {
+  background: #fafafa;
+  font-size: 30px;
+  text-align: center;
+  margin-bottom: 0px;
+  border-radius: 14px;
+  padding: 24px;
+}
+
+.feature-card h3 {
+  font-size: 20px;
+  margin-bottom: 12px;
+}
+
+.feature-card ul {
+  list-style: none;
+}
+
+.feature-card li {
+  color: #475569;
+  margin-bottom: 8px;
+}
+
+/* CTA */
+.features-cta {
+  background: #0f172a;
+  color: white;
+  text-align: center;
+  padding: 70px 20px;
+}
+
+.cta-btn {
+  display: inline-block;
+  margin-top: 20px;
+  border: 2px solid #1a1a2e;
+  background-color: white;
+  color: #1a1a2e;
+  font-style: bold;
+  font-size: 21px;
+  padding: 12px 26px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 650;
+}
+
+.cta-btn:hover {
+  background-color: #ffc107;
+  color: #1a1a2e;
+  font-style: bold;
+  border-color: #1a1a2e;
+}
