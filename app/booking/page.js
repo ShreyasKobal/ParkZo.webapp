@@ -24,8 +24,19 @@ function calculateAmount(startTime, endTime, vehicleType) {
 }
 
 export default function Booking() {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const router = useRouter();
+
+  // Protected route: /booking itself now requires auth, regardless of how
+  // it was reached (home, dashboard, features, a bookmark, a typed URL,
+  // etc.) — the previous page/button is never relied on for this.
+  // Wait for auth state to finish loading before deciding; only redirect
+  // once we know for certain there's no user.
+  useEffect(() => {
+    if (!loading && !user) {
+      router.replace("/login?next=/booking");
+    }
+  }, [loading, user, router]);
 
   // Chatbot refs — ported from js/chatbot.js, unchanged and out of scope
   // for this auth/navigation refactor. Note: as in the original
@@ -39,6 +50,15 @@ export default function Booking() {
   const chatInputRef = useRef(null);
   const chatMessagesRef = useRef(null);
   const resizeHandleRef = useRef(null);
+
+  // The chatbot markup below only exists in the DOM once the real
+  // (authenticated) booking UI renders — the loading shell above renders
+  // none of it, so the refs are still null on that first pass. This effect
+  // depends on that same condition so it re-runs (and picks up the
+  // now-populated refs) the moment the real UI actually mounts, instead of
+  // only ever running once against nulls. Chatbot behavior itself is
+  // unchanged.
+  const showBookingUI = !loading && !!user;
 
   useEffect(() => {
     // ===================== CHATBOT (ported from js/chatbot.js) =====================
@@ -141,21 +161,14 @@ export default function Booking() {
       document.removeEventListener("mousemove", handleResizeMouseMove);
       document.removeEventListener("mouseup", handleResizeMouseUp);
     };
-  }, []);
+  }, [showBookingUI]);
 
   // ===================== BOOKING FORM =====================
-  // The page itself stays publicly viewable (unchanged). Auth is only
-  // required at submit time now, via the centralized auth state instead of
-  // a fresh supabaseClient.auth.getUser() call — and instead of just
-  // alerting "User not authenticated", a logged-out visitor is sent to log
-  // in and returned here afterwards.
+  // No auth check needed here anymore — the route-level guard above
+  // guarantees this only ever renders (and therefore only ever submits)
+  // when `user` is present.
   async function handleBookingSubmit(e) {
     e.preventDefault();
-
-    if (!user) {
-      router.push("/login?next=/booking");
-      return;
-    }
 
     // Read form values
     const customerName = document.getElementById("customerName").value;
@@ -210,6 +223,20 @@ export default function Booking() {
     sessionStorage.setItem("receiptBookingId", data.id);
 
     router.push("/receipt");
+  }
+
+  // While auth state is resolving, or while redirecting a logged-out
+  // visitor away, show a minimal shell instead of the real booking form —
+  // never render it to someone who isn't logged in.
+  if (!showBookingUI) {
+    return (
+      <>
+        <Navbar />
+        <main style={{ padding: "80px 40px", textAlign: "center" }}>
+          <p>Loading…</p>
+        </main>
+      </>
+    );
   }
 
   return (

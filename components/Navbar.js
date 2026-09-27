@@ -5,13 +5,15 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../lib/auth/useAuth";
 
-// Ported 1:1 from the getGravatarUrl() helper duplicated across every
-// migrated page's js/auth.js copy.
-function getGravatarUrl(email) {
-  const trimmedEmail = email.trim().toLowerCase();
-  const hash =
-    typeof window !== "undefined" && window.md5 ? window.md5(trimmedEmail) : "";
-  return `https://www.gravatar.com/avatar/${hash}?s=200&d=identicon`;
+const DEFAULT_AVATAR = "/images/userlogo.png";
+
+// If an external avatar URL (e.g. a Google profile photo) fails to load,
+// fall back to the local default instead of showing a broken image icon.
+// Guarded so it only ever swaps once, even if the fallback image itself
+// were somehow also unavailable.
+function handleAvatarError(e) {
+  if (e.currentTarget.src.endsWith(DEFAULT_AVATAR)) return;
+  e.currentTarget.src = DEFAULT_AVATAR;
 }
 
 // Shared navbar: same DOM structure/classes as the original navbar across
@@ -48,9 +50,7 @@ export default function Navbar() {
 
   const fullName =
     user?.user_metadata?.full_name || user?.user_metadata?.name || "User";
-  const avatarUrl = user
-    ? user.user_metadata?.avatar_url || getGravatarUrl(user.email)
-    : "/images/userlogo.png";
+  const avatarUrl = user?.user_metadata?.avatar_url || DEFAULT_AVATAR;
 
   return (
     <header className="navbar">
@@ -105,7 +105,12 @@ export default function Navbar() {
             >
               <div className="nav-avatar-ring">
                 <div className="nav-avatar-inner">
-                  <img id="navUserAvatar" src={avatarUrl} alt="User" />
+                  <img
+                    id="navUserAvatar"
+                    src={avatarUrl}
+                    alt="User"
+                    onError={handleAvatarError}
+                  />
                 </div>
               </div>
             </button>
@@ -128,6 +133,7 @@ export default function Navbar() {
                           className="user-avatar"
                           src={avatarUrl}
                           alt=""
+                          onError={handleAvatarError}
                         />
                       </div>
                     </div>
