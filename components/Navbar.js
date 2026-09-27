@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../lib/auth/useAuth";
 
@@ -29,17 +29,27 @@ export default function Navbar() {
   const { user, signOut } = useAuth();
   const router = useRouter();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const menuWrapperRef = useRef(null);
 
+  // Robust outside-click close: check whether the click actually landed
+  // inside the menu wrapper (button + dropdown), rather than unconditionally
+  // closing on every click and relying on the avatar button's own handler
+  // calling stopPropagation() first to prevent that same click from
+  // immediately reversing itself. That ordering dependency was fragile.
   useEffect(() => {
-    function handleDocumentClick() {
-      setDropdownOpen(false);
+    function handleDocumentClick(e) {
+      if (
+        menuWrapperRef.current &&
+        !menuWrapperRef.current.contains(e.target)
+      ) {
+        setDropdownOpen(false);
+      }
     }
     document.addEventListener("click", handleDocumentClick);
     return () => document.removeEventListener("click", handleDocumentClick);
   }, []);
 
-  function handleUserMenuClick(e) {
-    e.stopPropagation();
+  function handleUserMenuClick() {
     setDropdownOpen((open) => !open);
   }
 
@@ -97,7 +107,7 @@ export default function Navbar() {
 
           <button className="icon-btn notification-btn">🔔</button>
 
-          <div className="user-menu-wrapper">
+          <div className="user-menu-wrapper" ref={menuWrapperRef}>
             <button
               className="icon-btn"
               id="userMenuBtn"
