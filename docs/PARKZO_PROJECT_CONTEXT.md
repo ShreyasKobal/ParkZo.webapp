@@ -424,6 +424,14 @@ implementation plan and risks for review before coding.
 **Required pre-implementation live checks**
 - The shared Supabase project must be checked read-only for detail-table policies, existing public functions, Storage buckets and counts of approved locations, live slots, photo rows, amenities and hours. Claude currently has no live Supabase access; project owner must run the supplied read-only queries and share results before implementation begins.
 
+**Live Supabase inspection — completed 2026-11-10**
+- Read-only policy query confirmed public SELECT policies on `parking_locations`, `parking_photos`, `parking_amenities`, `parking_hours` and `parking_slots` for anon/authenticated roles, limited by approved-location checks and/or non-deleted rows as shown in the live policy definitions. Authenticated owner/admin policies also exist as listed by the inspection.
+- Existing public functions are `get_public_parking_overview` and `get_featured_parking`; `get_slot_availability` also exists and has the previously identified status-filtering mismatch. No `get_public_parking_details` function exists yet.
+- `storage.buckets` returned zero rows. No Storage bucket exists in the shared project.
+- Live counts: approved locations = 0; non-soft-deleted slots = 0; non-soft-deleted photos = 0; non-soft-deleted amenities = 0; parking-hours rows = 0.
+- Consequence: there is no live sample location for an end-to-end populated details-page check. Do not seed/demo data in shared Supabase. The RPC and UI must still be tested with scratch/mock fixtures, while the live Preview can verify only loading/not-found/empty behavior until approved location data is created.
+- Claude's read-only inspection is complete. It has no live Supabase connection; the project owner ran these queries in the Supabase SQL Editor and provided the results.
+
 **Migration and release workflow**
 - Any new details RPC migration is additive, reviewed in full, committed/pushed to Git before it is applied to shared Supabase, and requires separate explicit approval before application. Claude must not apply SQL to shared Supabase.
 - Implementation, migration and test diffs must be reviewed before commit/push. Do not promote to `main` or production without explicit approval.
