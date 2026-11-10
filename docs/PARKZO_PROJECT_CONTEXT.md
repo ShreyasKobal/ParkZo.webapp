@@ -306,26 +306,50 @@ Ads 5%. Not a final commercial/legal/accounting policy.
 
 ## 8. Current progress
 
-**Completed** - Phase 1 original website migration to Next.js. - Central
-auth provider/hook, shared navbar, Google OAuth callback. - Public
-home/contact/features and protected dashboard/booking routes. - Avatar
-dropdown fix. - Phase 2 database schema committed/pushed and executed. -
-15 new tables verified. - RLS enabled on all 15 and policies
-inspected. - `profiles` additions verified. - Legacy `parking_bookings`
-verified unchanged. - No fake/demo data inserted.
+**Completed**
+- Phase 1 original website migration to Next.js.
+- Central auth provider/hook, shared navbar, Google OAuth callback.
+- Public home/contact/features and protected dashboard/booking routes.
+- Avatar dropdown fix.
+- Phase 2 core database schema committed/pushed and executed in shared Supabase; 15 new tables and RLS enablement verified.
+- Legacy `parking_bookings` preserved and verified unchanged.
+- Phase 2 Step 3: Public Parking Browsing and Search implemented and pushed to `develop`.
+- Public overview migration `20261105120000_public_parking_overview.sql` applied to shared Supabase and verified.
+- Featured parking migration `20261106120000_public_featured_parking.sql` applied to shared Supabase and verified.
+- Public read functions `get_public_parking_overview(...)` and `get_featured_parking(p_count)` were checked for function properties, execute permissions, return structure and anonymous execution.
+- Home, Dashboard and `/parking` use live Supabase data. Navbar search routes to `/parking?q=...`.
+- Browsing UI includes name/area/address search, 2W and 4W hourly rates, total/available slot counts, availability labels, loading/error/empty states, and refresh on page load and browser-tab focus (no polling).
+- Featured locations are ranked across the full dataset by available slot count using `get_featured_parking`; locations without slots are excluded from the featured list.
+- Preview deployment was manually checked: Home, `/parking`, search URL/result behavior and Dashboard rendered. The empty state was observed as expected. This is Preview verification only, not production verification.
+- Shared Supabase baseline was checked before and after the featured migration: existing-functions hash `c4096e5f10a6ed2f9df2c5c313cdd0b9`, policy count `44`, legacy booking rows `18`; values remained unchanged.
+- No fake/demo parking records were inserted into shared Supabase.
 
-**Not implemented yet** - Real public parking browsing/search connected
-to Supabase. - Parking details page. - Live availability/slot selection
-in customer UI. - New booking flow and booking table integration. -
-Server-side slot holds and payment confirmation. - Razorpay. - Customer
-dashboard improvements. - Owner application/dashboard. - Admin
-dashboard. - Email/SMS notifications. - Maps/current
-location/nearby/directions. - Full role/RLS tests, end-to-end QA and
-production hardening.
+**Verification details and boundaries**
+- Claude reported 43/43 SQL tests on a scratch database and 58/58 browser tests against mocked RPC data. These are development-environment tests, not tests executed against shared Supabase.
+- A randomized differential check on the scratch database reported zero mismatches against the overview function for the tested locations. This is not a live-data test.
+- Shared Supabase verification covered migration success, function properties, execute grants, return structure, anonymous execution and baseline preservation.
+- Preview UI checks used a database with no approved parking locations containing slots. Actual non-empty search results cannot yet be confirmed without approved location records.
 
-Last known relevant commits: `95cb5e0` avatar dropdown fix; `2900c78`
-Phase 2 schema. Last known local status had only `?? .env.local.example`
-untracked; re-check current status before work.
+**Pending / not implemented**
+- Phase 2 Step 4: Parking Details page.
+- Booking flow, slot selection and checkout holds.
+- Razorpay payments/refunds.
+- Customer dashboard improvements beyond the parking gallery.
+- Owner application/dashboard and admin dashboard.
+- Email/SMS notifications.
+- Maps/current location/nearby/directions.
+- Full role/RLS tests, end-to-end booking/payment tests, production verification and operational hardening.
+
+**Known limitations / separate follow-up items**
+- `/parking` currently requests up to 100 locations; pagination is not implemented.
+- Dashboard still contains existing Quick Actions/activity content outside Step 3 scope; some of that content is static and must not be mistaken for live data.
+- Anonymous access to internal `parking_locations` columns was previously identified as a separate security review item; Step 3 did not change table grants or RLS policies.
+- Existing slot-hold/availability function semantics remain unchanged and must be inspected before booking work. In particular, the known `release_expired_slot_holds()` status-reset concern must be handled deliberately, not silently changed during unrelated work.
+
+**Current source-control/deployment position**
+- Step 3 implementation commit: `46b5fef` — `Add public parking browsing with real Supabase data`, pushed to `develop`.
+- The featured migration is included in that commit and is applied to shared Supabase.
+- `develop` is the preview branch. Production deployment from `main` has not been promoted or verified as part of Step 3.
 
 ## 9. Roadmap
 
@@ -334,7 +358,7 @@ untracked; re-check current status before work.
         0 Phase 1 migration                             Completed
         1 Auth/navigation foundation                    Completed
         2 Phase 2 database foundation                   Completed
-        3 Public parking browsing/search                **Next**
+        3 Public parking browsing/search                Completed
         4 Parking details                               Pending
         5 Booking flow and slot hold                    Pending
         6 Razorpay payments/refunds                     Pending
@@ -345,22 +369,35 @@ untracked; re-check current status before work.
        11 Maps/location/directions                      Pending
        12 Security, QA, backups, deployment readiness   Pending
 
-## 10. Immediate next task: public parking browsing/search
 
-First inspect: 1. Existing Next.js pages/components and current parking
-cards/search. 2. Actual migration
-`supabase/migrations/20260928120000_phase2_core_schema.sql`. 3. Exact
-columns, relationships, RLS, triggers and functions. 4. Slot-hold and
-availability semantics, including the known status/hold concern.
+## 10. Next task: Phase 2 Step 4 — Parking Details
 
-Then implement the smallest safe change: - Public approved parking list
-from Supabase. - Search by name/location/address. - Real name,
-description, address, price, capacity, available count,
-Available/Limited/Full state. - Availability from actual
-slot/booking/active-hold data; exclude disabled, occupied and held. -
-Loading/error/empty states. - No fake data. - Preserve design. - Do not
-change auth, booking, payment, maps, owner/admin flows in this task. -
-Build and review before commit.
+Phase 2 Step 3, Public Parking Browsing and Search, is implemented,
+pushed to `develop`, and its two additive read-function migrations are
+applied and verified in shared Supabase. Preview UI checks confirmed
+the pages render and the empty state behaves as expected with no
+approved parking locations containing slots. Do not reopen Step 3 or
+add unrelated fixes unless a specific regression is found.
+
+Before coding Step 4:
+1. Inspect the actual current `develop` repository and working tree.
+2. Read the committed core schema migration and both public parking
+   migrations; inspect the actual tables, constraints, RLS and
+   functions used by the details experience.
+3. Inspect the implemented `/parking` page, current data helper and
+   styles. Preserve existing browsing/search behavior and visual identity.
+4. Compare the proposed details UI/data requirements with the locked
+   product requirements in this document. Report gaps or conflicts
+   before changing anything.
+
+Step 4 scope is the parking location details experience only. Planned
+content includes location information, full address, 2W/4W pricing,
+parking photos, amenities, operating hours and slot availability as
+supported by the approved requirements and actual schema. Do not
+invent extra features, modify booking/payment/auth, owner/admin flows,
+or change existing SQL functions/policies unless a separately reviewed
+and approved requirement makes that necessary. Prepare a scoped
+implementation plan and risks for review before coding.
 
 ## 11. Risks and safeguards
 
