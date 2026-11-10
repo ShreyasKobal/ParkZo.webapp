@@ -80,6 +80,7 @@ A successful build alone does not prove correctness or security.
 -   Check `git status` before/after work.
 -   Use concise descriptive commit messages.
 -   User/team reviews before commit/push.
+-   A coding assistant/agent may commit or push only after the user/team has explicitly reviewed and approved the exact changes. Never assume write access; verify the connected repository permissions first. If write access is unavailable, provide exact local Git commands for the user.
 -   Preview and Production currently share the same Supabase project;
     treat Preview DB operations as production-sensitive.
 
