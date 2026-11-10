@@ -430,7 +430,7 @@ implementation plan and risks for review before coding.
 
 **Current status:** The Step 4 plan is approved with the decisions above. Live Supabase read-only verification is pending; no Step 4 code or migration has been written.
 
-## 11. Risks and safeguards
+## 12. Risks and safeguards
 
 1.  Shared Supabase project means Preview DB writes can affect
     production.
@@ -445,7 +445,7 @@ implementation plan and risks for review before coding.
 8.  No storage buckets were created in the migration; uploads need
     separately designed bucket access policies.
 
-## 12. Change control
+## 13. Change control
 
 Treat the requirements and decisions here as locked. If code/schema
 conflicts with this document, report the discrepancy. If a new proposal
