@@ -185,17 +185,34 @@ updated in the repository and attach the latest versions.
 
 ## 12. Current next task
 
-Next task is **Public Parking Browsing and Search**.
+Phase 2 Step 3, Public Parking Browsing and Search, is complete and
+pushed to `develop`. Its two additive read-function migrations have
+been applied to shared Supabase and verified. Home, Dashboard and
+`/parking` are connected to real Supabase data. Preview UI checks
+confirmed the pages render and the empty state behaves as expected
+with no approved parking locations containing slots.
 
-Inspect the current Next.js structure, existing parking UI, and
-`supabase/migrations/20260928120000_phase2_core_schema.sql`. Confirm
-exact schema, RLS, triggers and hold/availability behavior. Then
-implement the smallest safe change: - Public approved parking list from
-Supabase. - Search by name/location/address. - Real price, capacity and
-availability. - Exclude disabled, occupied and held slots. -
-Loading/error/empty states. - No fake data. - Preserve existing
-design. - Do not change auth, booking, payment, maps, owner or admin
-flows in this task.
+**Next task: Phase 2 Step 4 — Parking Details.**
 
-Run tests, `npm run build`, and `git diff --check`. Present
-changes/results for review before commit.
+Before coding:
+1. Inspect the actual current GitHub branch, working tree and relevant
+   application files.
+2. Read the committed core schema migration and both public parking
+   migrations. Verify the exact tables, columns, constraints, RLS,
+   policies, triggers and functions involved.
+3. Inspect the current `/parking` implementation and preserve its
+   working search/listing behavior and existing ParkZo design.
+4. Map the requested details experience to the locked product
+   requirements and actual schema. Flag conflicts or missing schema
+   support before implementation.
+
+Step 4 is limited to the parking location details experience. Planned
+content includes location information, full address, 2W/4W rates,
+photos, amenities, operating hours and slot availability where
+supported by the approved requirements and schema. Do not invent
+additional capabilities or change booking, payment, auth, owner/admin
+workflows, existing SQL functions, or RLS policies without a separate
+review and explicit approval.
+
+Prepare the smallest safe implementation plan, affected files,
+data/security implications and test plan for review before coding.
