@@ -184,7 +184,76 @@ ChatGPT conversations. Different model versions, chat context,
 repository state and new decisions can affect results. Keep the files
 updated in the repository and attach the latest versions.
 
-## 12. Current next task
+## 12. ChatGPT and Claude collaboration protocol
+
+The ParkZo team uses ChatGPT and Claude as coordinated assistants. Both
+must use the two project Markdown documents as shared working context.
+
+**ChatGPT responsibilities**
+- Frame tasks, prepare precise implementation prompts and clarify
+  approved scope against the roadmap and locked decisions.
+- Review Claude's proposed plans, code diffs, SQL, test results and
+  deployment reports. Provide test plans and guide verification.
+- Maintain the two shared project documents on GitHub so project
+  progress, decisions, known issues and next tasks remain current.
+- After updating either document, tell Claude which file changed, the
+  commit/branch and what it must reread. Do not assume Claude has seen a
+  documentation update merely because it is on GitHub.
+
+**Claude responsibilities**
+- Inspect the actual repository and relevant Supabase migrations/schema
+  before implementation.
+- Implement approved application code and SQL migration files, preserve
+  existing behavior, and avoid unapproved scope changes.
+- Run appropriate tests, `npm run build`, and `git diff --check`;
+  report exact results, files changed, risks and remaining gaps.
+- Commit and push approved implementation changes to the correct
+  branch when its GitHub permissions allow. Never push unreviewed
+  changes, force-push, or push feature work directly to `main`.
+- Never apply SQL to shared Supabase without separate explicit approval.
+
+**Mandatory start-of-task handoff (every phase and step)**
+1. Fetch the latest target branch and confirm its branch name, HEAD
+   commit and working-tree status.
+2. Read both `docs/PARKZO_PROJECT_CONTEXT.md` and
+   `docs/PARKZO_DEVELOPMENT_RULES.md` completely, including the
+   current progress, roadmap and known risks. Do this at the start of
+   every new phase/step (for example, Phase 2 Step 4), not only once per
+   conversation.
+3. Inspect the actual repository files and committed Supabase
+   migrations relevant to the task. Inspect live Supabase state
+   read-only when database behavior matters. Do not rely on old chat
+   summaries when current repository/database evidence is available.
+4. Report the current documented status, any mismatch between docs,
+   code and database, and the smallest implementation plan before
+   coding.
+
+**Documentation synchronization**
+- The two Markdown files are the shared source of truth for team
+  context, decisions, progress and working rules.
+- At the end of each meaningful feature/step, update the documents
+  before starting the next step. Record what is implemented, what was
+  tested and where, migrations applied or not applied, branch/commit,
+  deployment state, limitations and next task. Clearly distinguish
+  scratch/mock tests from shared-Supabase and Preview/Production checks.
+- After every documentation update, ChatGPT must send Claude the
+  updated file names, GitHub commit link(s), branch and required
+  rereading instruction. Claude must reread both documents and
+  acknowledge the current status before proceeding.
+- If either assistant discovers a mismatch or a new approved decision,
+  report it and synchronize the documents rather than maintaining
+  conflicting private summaries.
+
+**Change approval**
+- The team reviews the implementation plan and scope before coding.
+- The team reviews the actual diff and test report before implementation
+  commits are pushed.
+- GitHub write access does not itself grant approval to change scope,
+  commit, push, merge to `main`, deploy to Production, or apply SQL to
+  shared Supabase. Each of those actions follows the project's explicit
+  approval and deployment rules.
+
+## 13. Current next task
 
 Phase 2 Step 3, Public Parking Browsing and Search, is complete and
 pushed to `develop`. Its two additive read-function migrations have
