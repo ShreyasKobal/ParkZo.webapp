@@ -1,0 +1,279 @@
+/* =============================================================================
+   Public parking browsing (Phase 2, Step 3)
+   New file: used by /parking and by the real-data parts of Home and Dashboard.
+   Reuses the existing design language (navy #1a1a2e, #f5f6fa, status colours
+   from styles.css). No existing stylesheet is modified.
+   ============================================================================= */
+
+/* ---------- /parking page ---------- */
+.parking-page {
+  background: #f5f6fa;
+  min-height: calc(100vh - 70px);
+  padding: 40px 16px 80px;
+}
+
+.parking-wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.parking-title {
+  font-size: 32px;
+  color: #1a1a2e;
+  margin-bottom: 6px;
+}
+
+.parking-subtitle {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 24px;
+}
+
+.parking-search {
+  max-width: 600px;
+  margin-bottom: 16px;
+}
+
+.parking-count {
+  font-size: 14px;
+  color: #444;
+  margin-bottom: 20px;
+  min-height: 20px;
+}
+
+.parking-note {
+  font-size: 13px;
+  color: #6b7280;
+  margin-top: 20px;
+}
+
+.parking-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+/* ---------- card ---------- */
+.parking-card {
+  border-radius: 18px;
+  overflow: hidden;
+  background: #ffffff;
+  border: #1a1a2e 2px solid;
+  display: flex;
+  flex-direction: column;
+}
+
+.parking-card-body {
+  padding: 16px 18px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.parking-card-name {
+  font-size: 16px;
+  color: #1a1a2e;
+}
+
+.parking-card-address {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.parking-card-desc {
+  font-size: 13px;
+  color: #444;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.parking-card-rates {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1a1a2e;
+}
+
+.parking-card-tag {
+  align-self: flex-start;
+  font-size: 11px;
+  font-weight: 600;
+  color: #1a1a2e;
+  background: #f5f6fa;
+  border: 1px solid #1a1a2e;
+  border-radius: 20px;
+  padding: 2px 10px;
+}
+
+.parking-card-avail {
+  margin-top: auto;
+  padding-top: 10px;
+}
+
+.parking-card-avail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.parking-card-slots {
+  font-size: 12px;
+  font-weight: 500;
+  color: #575b63;
+}
+
+.parking-card-unset {
+  font-size: 13px;
+  font-weight: 600;
+  color: #575b63;
+}
+
+/* Status badge colours: same values as .dp-card.* .status in styles.css */
+.parking-card.available .status {
+  background-color: #e8f8ef;
+  color: #16a34a;
+}
+.parking-card.limited .status {
+  background-color: #fff7ed;
+  color: #ea580c;
+}
+.parking-card.full .status {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+.parking-card.available .progress-fill {
+  background-color: #16a34a;
+}
+.parking-card.limited .progress-fill {
+  background-color: #ea580c;
+}
+.parking-card.full .progress-fill {
+  background-color: #dc2626;
+}
+
+/* ---------- neutral photo placeholder (no real photos yet) ---------- */
+.parking-photo-placeholder {
+  width: 100%;
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e5e7eb;
+  color: #1a1a2e;
+  font-size: 44px;
+  font-weight: 700;
+}
+.parking-photo-placeholder span {
+  opacity: 0.3;
+}
+/* Same height as the Dashboard gallery images it stands in for */
+.pg-card .parking-photo-placeholder {
+  height: 200px;
+}
+
+/* ---------- loading / error / empty states ---------- */
+.parking-state {
+  text-align: center;
+  padding: 56px 16px;
+  color: #444;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+}
+.parking-state h2 {
+  font-size: 20px;
+  color: #1a1a2e;
+  margin-bottom: 8px;
+}
+.parking-state p {
+  font-size: 14px;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+.parking-retry {
+  margin-top: 16px;
+  background: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: inherit;
+}
+
+.parking-skeleton {
+  height: 250px;
+  border-radius: 18px;
+  background: #e5e7eb;
+  border: #d1d5db 2px solid;
+}
+
+/* ---------- Home hero card (inside .dashboard-preview) ---------- */
+.dp-state {
+  font-size: 14px;
+  color: #444;
+  line-height: 1.5;
+  padding: 8px 0 12px;
+}
+.dp-retry {
+  background: none;
+  border: none;
+  padding: 0;
+  margin-left: 4px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #1a1a2e;
+  text-decoration: underline;
+  cursor: pointer;
+  font-family: inherit;
+}
+.dp-viewall {
+  display: block;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: #1a1a2e;
+  text-decoration: underline;
+}
+
+/* ---------- Dashboard gallery additions ---------- */
+.pg-card-link {
+  display: block;
+  color: inherit;
+}
+.pg-info .pg-avail {
+  display: block;
+  margin-top: 4px;
+  font-weight: 600;
+}
+.pg-state {
+  font-size: 15px;
+  color: #444;
+  line-height: 1.5;
+  padding: 24px 0;
+}
+.pg-viewall {
+  display: inline-block;
+  margin-top: 24px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #1a1a2e;
+  text-decoration: underline;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .parking-card .progress-fill {
+    animation: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .parking-title {
+    font-size: 26px;
+  }
+  .parking-page {
+    padding: 28px 16px 60px;
+  }
+}

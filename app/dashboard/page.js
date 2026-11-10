@@ -7,6 +7,86 @@ import { supabaseClient } from "../../lib/supabaseClient";
 import { useAuth } from "../../lib/auth/useAuth";
 import Navbar from "../../components/Navbar";
 import "../../css/dashboard.css";
+import "../../css/parking.css";
+import { useFeaturedParking } from "../../lib/parking/usePublicParking";
+import {
+  STATE_LABEL,
+  formatRates,
+  getAvailabilityState,
+  slotsText,
+} from "../../lib/parking/publicParking";
+
+// Real parking data for the "Popular Parking Locations" gallery (replaces the
+// old hard-coded cards). The database ranks ALL approved locations and returns
+// the 3 with the most available slots. Rendered only inside the logged-in
+// dashboard view, so no request is made while the page is still redirecting
+// a visitor.
+function DashboardParkingGallery() {
+  const { data, loading, error, refresh } = useFeaturedParking({ count: 3 });
+
+  if (error && !data) {
+    return (
+      <p className="pg-state" role="alert">
+        Couldn’t load parking.{" "}
+        <button type="button" className="dp-retry" onClick={refresh}>
+          Try again
+        </button>
+      </p>
+    );
+  }
+  if (loading && !data) {
+    return <p className="pg-state">Loading parking…</p>;
+  }
+
+  const featured = data ?? [];
+  if (featured.length === 0) {
+    return (
+      <>
+        <p className="pg-state">No parking available yet.</p>
+        <Link href="/parking" className="pg-viewall">
+          View all parking
+        </Link>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <div className="pg-grid">
+        {featured.map((location) => {
+          const state = getAvailabilityState(
+            location.availableSlots,
+            location.totalSlots
+          );
+          return (
+            <Link
+              key={location.id}
+              href={`/parking?q=${encodeURIComponent(location.name)}`}
+              className="pg-card pg-card-link"
+            >
+              <div className="parking-photo-placeholder" aria-hidden="true">
+                <span>P</span>
+              </div>
+              <div className="pg-info">
+                <h3>{location.name}</h3>
+                <span>
+                  {location.city} • {formatRates(location)}
+                </span>
+                <span className="pg-avail">
+                  {STATE_LABEL[state]} •{" "}
+                  {slotsText(location.availableSlots, location.totalSlots)}
+                </span>
+              </div>
+            </Link>
+          );
+        })}
+      </div>
+      <Link href="/parking" className="pg-viewall">
+        View all parking
+      </Link>
+    </>
+  );
+}
 
 export default function Dashboard() {
   const { user, loading } = useAuth();
@@ -295,31 +375,7 @@ export default function Dashboard() {
             Trusted parking spots used by ParkZo drivers
           </p>
 
-          <div className="pg-grid">
-            <div className="pg-card">
-              <img src="/images/parking-mall.png" alt="Mall Parking" />
-              <div className="pg-info">
-                <h3>Mall Plaza Parking</h3>
-                <span>₹30 / hr • Covered</span>
-              </div>
-            </div>
-
-            <div className="pg-card">
-              <img src="/images/parking-office.png" alt="Office Parking" />
-              <div className="pg-info">
-                <h3>City Center Garage</h3>
-                <span>₹25 / hr • Multi-level</span>
-              </div>
-            </div>
-
-            <div className="pg-card">
-              <img src="/images/parking-metro.png" alt="Metro Parking" />
-              <div className="pg-info">
-                <h3>Metro Station Parking</h3>
-                <span>₹20 / hr • Open</span>
-              </div>
-            </div>
-          </div>
+          <DashboardParkingGallery />
         </div>
       </section>
 

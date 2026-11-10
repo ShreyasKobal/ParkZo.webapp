@@ -30,6 +30,21 @@ export default function Navbar() {
   const router = useRouter();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const menuWrapperRef = useRef(null);
+  const [searchText, setSearchText] = useState("");
+
+  // Navbar search sends the visitor to the public parking list. Empty search
+  // simply opens the full list.
+  function handleSearchSubmit() {
+    const q = searchText.trim();
+    router.push(q ? `/parking?q=${encodeURIComponent(q)}` : "/parking");
+  }
+
+  function handleSearchKeyDown(e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleSearchSubmit();
+    }
+  }
 
   // Robust outside-click close: check whether the click actually landed
   // inside the menu wrapper (button + dropdown), rather than unconditionally
@@ -92,8 +107,15 @@ export default function Navbar() {
               type="text"
               placeholder="Search for the location..."
               className="search-input"
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+              onKeyDown={handleSearchKeyDown}
             />
-            <button className="search-btn">
+            <button
+              type="button"
+              className="search-btn"
+              onClick={handleSearchSubmit}
+            >
               <i className="fas fa-search"></i>
             </button>
           </div>

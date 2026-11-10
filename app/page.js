@@ -3,6 +3,90 @@
 import Link from "next/link";
 import { useEffect, useRef } from "react";
 import Navbar from "../components/Navbar";
+import { useFeaturedParking } from "../lib/parking/usePublicParking";
+import {
+  STATE_LABEL,
+  formatRates,
+  getAvailabilityState,
+  percentUsed,
+  slotsText,
+} from "../lib/parking/publicParking";
+import "../css/parking.css";
+
+// Real parking data for the hero card (replaces the old hard-coded cards).
+// Same markup/classes as before. The database ranks ALL approved locations
+// and returns the 3 with the most available slots (locations without slots
+// are excluded there).
+function HomeParkingPreview() {
+  const { data, loading, error, refresh } = useFeaturedParking({ count: 3 });
+
+  if (error && !data) {
+    return (
+      <p className="dp-state" role="alert">
+        Couldn’t load parking.
+        <button type="button" className="dp-retry" onClick={refresh}>
+          Try again
+        </button>
+      </p>
+    );
+  }
+  if (loading && !data) {
+    return <p className="dp-state">Loading parking…</p>;
+  }
+
+  const featured = data ?? [];
+  if (featured.length === 0) {
+    return (
+      <>
+        <p className="dp-state">No parking available yet.</p>
+        <Link href="/parking" className="dp-viewall">
+          View all parking
+        </Link>
+      </>
+    );
+  }
+
+  return (
+    <>
+      {featured.map((location) => {
+        const state = getAvailabilityState(
+          location.availableSlots,
+          location.totalSlots
+        );
+        return (
+          <div key={location.id} className={`dp-card ${state}`}>
+            <div className="dp-info">
+              <strong>{location.name}</strong>
+              <p>
+                {location.city} • {formatRates(location)}
+              </p>
+              <div className="progress">
+                <div
+                  className="progress-fill"
+                  style={{
+                    width: `${percentUsed(
+                      location.availableSlots,
+                      location.totalSlots
+                    )}%`,
+                  }}
+                ></div>
+              </div>
+            </div>
+            <div className="status-wrap">
+              <span className="status">{STATE_LABEL[state]}</span>
+              <span className="slots">
+                {slotsText(location.availableSlots, location.totalSlots)}
+              </span>
+            </div>
+          </div>
+        );
+      })}
+      <Link href="/parking" className="dp-viewall">
+        View all parking
+      </Link>
+    </>
+  );
+}
 
 export default function Home() {
   // Chatbot refs — ported from js/chatbot.js, unchanged and out of scope
@@ -147,62 +231,13 @@ export default function Home() {
             <div className="hero-visual">
               <div className="dashboard-preview">
                 <div className="dp-header">
-                  Nearby Parking
+                  Available Parking
                   <span className="live-indicator">
                     <span className="live-dot"></span> Live
                   </span>
                 </div>
 
-                <div className="dp-card available">
-                  <div className="dp-info">
-                    <strong>Mall Plaza Parking</strong>
-                    <p>0.2 km • ₹30/hr</p>
-                    <div className="progress">
-                      <div
-                        className="progress-fill"
-                        style={{ width: "58%" }}
-                      ></div>
-                    </div>
-                  </div>
-                  <div className="status-wrap">
-                    <span className="status">Available</span>
-                    <span className="slots">21/50 slots left</span>
-                  </div>
-                </div>
-
-                <div className="dp-card limited">
-                  <div className="dp-info">
-                    <strong>City Center Garage</strong>
-                    <p>0.5 km • ₹25/hr</p>
-                    <div className="progress">
-                      <div
-                        className="progress-fill"
-                        style={{ width: "90%" }}
-                      ></div>
-                    </div>
-                  </div>
-                  <div className="status-wrap">
-                    <span className="status">Limited</span>
-                    <span className="slots">3/30 slots left</span>
-                  </div>
-                </div>
-
-                <div className="dp-card full">
-                  <div className="dp-info">
-                    <strong>Metro Station Parking</strong>
-                    <p>1.2 km • ₹20/hr</p>
-                    <div className="progress">
-                      <div
-                        className="progress-fill"
-                        style={{ width: "100%" }}
-                      ></div>
-                    </div>
-                  </div>
-                  <div className="status-wrap">
-                    <span className="status">Full</span>
-                    <span className="slots">0 slots left</span>
-                  </div>
-                </div>
+                <HomeParkingPreview />
               </div>
             </div>
           </div>
