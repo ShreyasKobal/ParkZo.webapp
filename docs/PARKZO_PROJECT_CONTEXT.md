@@ -399,6 +399,37 @@ or change existing SQL functions/policies unless a separately reviewed
 and approved requirement makes that necessary. Prepare a scoped
 implementation plan and risks for review before coding.
 
+## 11. Phase 2 Step 4 — Parking Details (approved plan; implementation pending)
+
+**Scope and implementation decisions**
+- Add a public details route: `/parking/[id]`, using the location UUID.
+- Use one additive, read-only RPC, `public.get_public_parking_details(p_location_id uuid)`, as the public data boundary. Do not fetch the underlying detail tables directly from the browser for this page.
+- The function must return only an explicit allowlist of public location fields, aggregate slot counts, safe photo metadata, amenities and operating hours. It must not return `owner_id`, internal approval/status fields, `uploaded_by`, `storage_path`, booking/hold rows, or personal data.
+- Use `SECURITY DEFINER`, a pinned `search_path`, fully qualified object references, `STABLE`, explicit revoke/grant statements and the same least-privilege execution pattern as the existing public read functions.
+- Availability is the current one-hour window (now through now + 1 hour) and must match `get_public_parking_overview`: count non-soft-deleted physical slots in total capacity; available count includes only `status = 'available'` slots that pass `slot_is_free`. Disabled, held and occupied statuses are not available. Zero total slots must display “Slots not set up yet”, not “Full”. Do not use the existing `get_slot_availability()` for the details aggregate because its status filtering differs.
+- `/parking` listing cards become links to `/parking/[id]`. Dashboard featured parking cards link directly to the matching details route. Keep the Home hero preview behavior unchanged; its existing “View all parking” link remains the Home entry point.
+- Show an availability label only (Available/Limited/Full); never expose the internal location approval lifecycle/status.
+- Show location name, full postal address including country, description, 2W/4W hourly rates, amenities, operating hours and aggregate availability.
+- Custom hours use day numbering 0=Sunday through 6=Saturday. A closing time earlier than opening time is shown as an overnight window ending the next day. A missing schedule is shown as “Hours not provided”; 24/7 locations show “Open 24/7”.
+- Do not show latitude/longitude or map/directions in Step 4; those remain for the Maps step.
+- Do not add a booking CTA, slot-by-slot selection or booking controls; those remain Step 5.
+
+**Photo handling decision**
+- The core schema migration deliberately did not create a Storage bucket. Do not create a bucket or Storage policies as part of this details-page change.
+- Do not expose or return `storage_path` or generate speculative image URLs. Use the neutral photo placeholder. Distinguish “No photos yet” when there are no photo records from “Photos unavailable” when records exist but image storage is not configured. Actual image delivery/upload requires a separately reviewed Storage bucket and access-policy design.
+
+**Security and known issue boundary**
+- The previously identified anonymous table-column exposure remains a separate open security task. Step 4 must not use direct browser reads to retrieve detail fields and must not silently alter existing table grants or RLS policies. The new RPC must return only the reviewed public allowlist. Track the existing exposure for separate remediation.
+
+**Required pre-implementation live checks**
+- The shared Supabase project must be checked read-only for detail-table policies, existing public functions, Storage buckets and counts of approved locations, live slots, photo rows, amenities and hours. Claude currently has no live Supabase access; project owner must run the supplied read-only queries and share results before implementation begins.
+
+**Migration and release workflow**
+- Any new details RPC migration is additive, reviewed in full, committed/pushed to Git before it is applied to shared Supabase, and requires separate explicit approval before application. Claude must not apply SQL to shared Supabase.
+- Implementation, migration and test diffs must be reviewed before commit/push. Do not promote to `main` or production without explicit approval.
+
+**Current status:** The Step 4 plan is approved with the decisions above. Live Supabase read-only verification is pending; no Step 4 code or migration has been written.
+
 ## 11. Risks and safeguards
 
 1.  Shared Supabase project means Preview DB writes can affect
