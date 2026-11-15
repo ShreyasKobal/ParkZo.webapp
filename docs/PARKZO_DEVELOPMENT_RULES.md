@@ -267,37 +267,47 @@ with no approved parking locations containing slots.
 - The additive SQL migration
   `supabase/migrations/20261110120000_public_parking_details.sql`
   was committed/pushed to `develop` in commit
-  `3373773ccfd733fb4a40908cfd74fd2e405e324f`. This commit contains
-  only the migration. It has not been applied to shared Supabase.
-- Frontend files remain uncommitted/unpushed in Claude's local working
-  tree. Final review requires a details-route fix so navigating between
-  two location UUIDs cannot briefly show the previous location's data,
-  plus a regression test. Do not change list/search refresh behavior.
-- The project owner must record the pre-migration Supabase baseline and
-  provide separate explicit approval before applying the migration.
-  Claude must not apply SQL to shared Supabase.
-- After migration application and read-only verification, complete the
-  frontend fix, test/build review, approved frontend push and Preview
-  verification. Do not promote to `main` or Production without
-  separate explicit approval.
+  `3373773ccfd733fb4a40908cfd74fd2e405e324f` and applied to shared
+  Supabase on 2026-11-15 after separate explicit approval.
+- Post-application checks A–D passed. The existing-functions hash
+  remained `c4096e5f10a6ed2f9df2c5c313cdd0b9`, policy count remained
+  `44`, and legacy `parking_bookings` rows remained `18`. The new
+  function's SECURITY DEFINER/STABLE properties, pinned search path,
+  jsonb return type and execute grants were verified. Anonymous calls
+  with a random UUID and NULL both returned NULL without errors.
+- The reviewed frontend implementation was pushed to `develop` in
+  commit `a7b163eaab58906b62bce1e1cc7595ec2381f726`. It contains
+  exactly four modified files and three new files. It adds the public
+  `/parking/[id]` details page, the RPC data helper, details styling,
+  listing/dashboard deep links and the details-only scoped refresh fix.
+- The details-only refresh key prevents a previous location's data or
+  error from appearing after navigation to a different location UUID.
+  List/search and featured hook behavior remains unscoped and unchanged.
+- Claude reported post-fix results: Step 4 scratch SQL 77/77, Step 4
+  mocked browser 92/92, Step 3 mocked browser 58/58, separate hook
+  regression harness 9/9, `npm run build` passed and
+  `git diff --check` clean. These were Claude-reported development
+  checks, not independently run by ChatGPT.
 - Operating-hours schema does not require seven rows per location.
   Partial schedules are valid; missing days display “Hours not
   provided”, never an assumed “Closed”.
+- No Preview verification of Step 4 has been completed. Shared
+  Supabase currently has no approved parking locations or live slots,
+  so populated live details cannot be verified yet. Do not insert demo
+  data. Do not merge to `main` or promote to Production without
+  separate approval.
 
 **Next steps / handoff**
-1. Project owner records the baseline values in the shared Supabase SQL
-   Editor: existing-functions hash
-   `c4096e5f10a6ed2f9df2c5c313cdd0b9`, policy count `44`, and
-   legacy `parking_bookings` rows `18`. These are expected reference
-   values; compare the actual before/after results rather than assuming.
-2. Obtain separate explicit approval before applying the committed
-   migration to shared Supabase. Run its read-only verification queries
-   afterward and compare the baseline.
-3. Finish the frontend route-ID stale-data fix and regression test,
-   then review tests, build and diff before pushing frontend changes.
-4. Verify the Step 4 Preview experience. Since shared Supabase currently
-   has no approved parking locations, populated live details cannot be
-   verified until real approved data exists. Do not insert demo data.
+1. Verify the `develop` Vercel Preview deployment and manually test the
+   details route's loading, invalid/not-found, retry/error and responsive
+   states. Verify that listing and Dashboard parking cards link to the
+   UUID details route when real approved cards are available.
+2. Since shared Supabase has no approved locations or live slots, do
+   not expect a populated live details page or availability comparison.
+   Complete those checks only after real approved data exists; do not
+   add demonstration records.
+3. Keep `main` and Production unchanged unless the team gives separate
+   explicit approval.
 
 Both assistants must reread both project documents at the start of each
 new step and report any discrepancy before changing scope.

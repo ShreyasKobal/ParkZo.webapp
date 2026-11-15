@@ -325,18 +325,20 @@ Ads 5%. Not a final commercial/legal/accounting policy.
 - No fake/demo parking records were inserted into shared Supabase.
 
 **In progress — Phase 2 Step 4: Parking Details**
-- The approved additive migration `supabase/migrations/20261110120000_public_parking_details.sql` was committed and pushed to `develop` in commit `3373773ccfd733fb4a40908cfd74fd2e405e324f` (migration only). GitHub comparison from the prior base `087b9c6` confirms exactly one added file.
-- The migration adds `public.get_public_parking_details(p_location_id uuid)`. It has **not** been applied to shared Supabase. The migration commit explicitly records that it is not applied.
-- Frontend Step 4 work (4 modified files and 4 new files) remains uncommitted and unpushed in Claude's local working tree; it is not present on `develop`.
-- Frontend final review identified one navigation issue to fix before commit: when the details route changes from one location UUID to another, the shared refresh hook can retain the previous location's details while the new request is loading. Fix this only for the details route and add a regression test; preserve browsing/search behavior.
-- Operating-hours schema confirmation: `parking_hours` permits at most one row per location/day and validates day numbers and open/closed row shape, but does not require seven rows. A missing day in a partial schedule must display “Hours not provided”, not “Closed”. Seven rows are not guaranteed and no Step 4 code change is required for this behavior.
-- Claude reports Step 4 scratch SQL checks 77/77, Step 4 mocked browser checks 80/80, Step 3 mocked browser checks 58/58, `npm run build` passed and `git diff --check` clean. These reported checks used scratch/mock data, not shared Supabase. Re-run the frontend checks after the navigation fix.
+- The additive migration `supabase/migrations/20261110120000_public_parking_details.sql` was committed and pushed to `develop` in migration-only commit `3373773ccfd733fb4a40908cfd74fd2e405e324f`, then applied successfully to the shared Supabase project on 2026-11-15 after separate explicit approval.
+- Post-application checks A–D passed. The existing-functions hash remained `c4096e5f10a6ed2f9df2c5c313cdd0b9`, policy count remained `44`, and legacy `parking_bookings` row count remained `18`. The new function was confirmed SECURITY DEFINER, STABLE, pinned to the approved search path, and returning jsonb. Execute was granted to anon, authenticated and service_role (plus owner postgres); no PUBLIC execute grant was present. Anonymous calls with a random UUID and NULL both returned NULL without errors.
+- The reviewed frontend implementation was pushed to `develop` in commit `a7b163eaab58906b62bce1e1cc7595ec2381f726`. It contains exactly 4 modified files and 3 new files: dashboard and listing deep links, scoped details refresh hook, `/parking/[id]` page, details RPC helper and details CSS.
+- The scoped refresh fix is included: when the details route changes between location UUIDs, the previous location's data/error is not exposed for the new id. The list and featured hooks retain their prior unscoped refresh behavior.
+- The page uses only `get_public_parking_details`, shows approved public location details, pricing, aggregate availability, amenities, hours and a neutral photo placeholder. It adds no booking controls, maps, storage bucket, Storage policies or direct detail-table reads.
+- Operating-hours rule remains: partial schedules are valid; a day without a row displays “Hours not provided”, not “Closed”.
+- Claude reported post-fix Step 4 scratch SQL checks 77/77, Step 4 mocked browser checks 92/92, Step 3 mocked browser checks 58/58, a separate hook regression harness 9/9, `npm run build` passed and `git diff --check` clean. These are Claude-reported development/scratch checks, not independently run by ChatGPT.
+- Step 4 Preview verification is still pending. Shared Supabase has no approved locations or live slots, so populated live detail content cannot yet be verified. Do not insert demo data.
 
 **Verification details and boundaries**
-- Claude reported 43/43 SQL tests on a scratch database and 58/58 browser tests against mocked RPC data. These are development-environment tests, not tests executed against shared Supabase.
-- A randomized differential check on the scratch database reported zero mismatches against the overview function for the tested locations. This is not a live-data test.
-- Shared Supabase verification covered migration success, function properties, execute grants, return structure, anonymous execution and baseline preservation.
-- Preview UI checks used a database with no approved parking locations containing slots. Actual non-empty search results cannot yet be confirmed without approved location records.
+- Claude reported 77/77 Step 4 SQL scratch checks, 92/92 Step 4 mocked browser checks, 58/58 Step 3 mocked browser checks and 9/9 checks in a separate hook regression harness after the scoped refresh fix. Claude also reported `npm run build` and `git diff --check` passing. These results were reported by Claude and were not independently executed by ChatGPT.
+- A randomized differential check on the scratch database previously reported zero mismatches against the overview function for the tested locations. This is not a live-data test.
+- Shared Supabase migration verification on 2026-11-15 confirmed the function properties and execute permissions, anonymous NULL behavior for a random UUID and NULL input, and preservation of the exact baseline: hash `c4096e5f10a6ed2f9df2c5c313cdd0b9`, 44 policies and 18 legacy booking rows.
+- The shared Supabase project still has no approved parking locations or non-soft-deleted slots. There is no live record for a populated RPC/availability comparison or populated details-page Preview test. Do not seed demonstration records.
 
 **Pending / not implemented**
 - Booking flow, slot selection and checkout holds.
@@ -354,9 +356,10 @@ Ads 5%. Not a final commercial/legal/accounting policy.
 - Existing slot-hold/availability function semantics remain unchanged and must be inspected before booking work. In particular, the known `release_expired_slot_holds()` status-reset concern must be handled deliberately, not silently changed during unrelated work.
 
 **Current source-control/deployment position**
-- Step 3 implementation commit: `46b5fef` — `Add public parking browsing with real Supabase data`, pushed to `develop`.
-- The featured migration is included in that commit and is applied to shared Supabase.
-- `develop` is the preview branch. Production deployment from `main` has not been promoted or verified as part of Step 3.
+- Step 3 implementation commit: `46b5fef` — `Add public parking browsing with real Supabase data`, pushed to `develop`; its featured migration is applied to shared Supabase.
+- Step 4 RPC migration commit: `3373773ccfd733fb4a40908cfd74fd2e405e324f`, applied and verified in shared Supabase on 2026-11-15.
+- Step 4 frontend commit: `a7b163eaab58906b62bce1e1cc7595ec2381f726`, pushed to `develop`. The commit changes exactly the seven reviewed frontend files.
+- `develop` is the Preview branch. Step 4 Preview verification has not yet been completed. Nothing has been merged to `main` or deployed to Production as part of Step 4.
 
 ## 9. Roadmap
 
@@ -434,7 +437,7 @@ implementation plan and risks for review before coding.
 
 **Live Supabase inspection — completed 2026-11-10**
 - Read-only policy query confirmed public SELECT policies on `parking_locations`, `parking_photos`, `parking_amenities`, `parking_hours` and `parking_slots` for anon/authenticated roles, limited by approved-location checks and/or non-deleted rows as shown in the live policy definitions. Authenticated owner/admin policies also exist as listed by the inspection.
-- Existing public functions are `get_public_parking_overview` and `get_featured_parking`; `get_slot_availability` also exists and has the previously identified status-filtering mismatch. No `get_public_parking_details` function exists yet.
+- At the time of this 2026-11-10 inspection, the public functions were `get_public_parking_overview` and `get_featured_parking`; `get_slot_availability` also existed and had the previously identified status-filtering mismatch. The new details function was added later by the approved migration described below.
 - `storage.buckets` returned zero rows. No Storage bucket exists in the shared project.
 - Live counts: approved locations = 0; non-soft-deleted slots = 0; non-soft-deleted photos = 0; non-soft-deleted amenities = 0; parking-hours rows = 0.
 - Consequence: there is no live sample location for an end-to-end populated details-page check. Do not seed/demo data in shared Supabase. The RPC and UI must still be tested with scratch/mock fixtures, while the live Preview can verify only loading/not-found/empty behavior until approved location data is created.
@@ -444,7 +447,7 @@ implementation plan and risks for review before coding.
 - Any new details RPC migration is additive, reviewed in full, committed/pushed to Git before it is applied to shared Supabase, and requires separate explicit approval before application. Claude must not apply SQL to shared Supabase.
 - Implementation, migration and test diffs must be reviewed before commit/push. Do not promote to `main` or production without explicit approval.
 
-**Current status:** The Step 4 plan and scope are approved. Live Supabase read-only inspection was completed 2026-11-10. The migration was committed/pushed to `develop` in `3373773ccfd733fb4a40908cfd74fd2e405e324f`, migration only, and is not yet applied to shared Supabase. Frontend implementation remains uncommitted/unpushed in Claude's working tree and needs the location-ID navigation stale-data fix plus regression test and final review. No Preview verification of Step 4 has been performed.
+**Current status:** The approved Step 4 migration was applied and verified in shared Supabase on 2026-11-15. The reviewed frontend implementation, including the location-ID scoped refresh fix, was pushed to `develop` in `a7b163eaab58906b62bce1e1cc7595ec2381f726`. Step 4 is awaiting Preview verification. Because the shared database has no approved locations or live slots, populated details cannot be tested until real approved parking data exists. No production promotion has been approved or performed.
 
 ## 12. Risks and safeguards
 
