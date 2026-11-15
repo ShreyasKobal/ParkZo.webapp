@@ -61,7 +61,7 @@ function DashboardParkingGallery() {
           return (
             <Link
               key={location.id}
-              href={`/parking?q=${encodeURIComponent(location.name)}`}
+              href={`/parking/${location.id}`}
               className="pg-card pg-card-link"
             >
               <div className="parking-photo-placeholder" aria-hidden="true">

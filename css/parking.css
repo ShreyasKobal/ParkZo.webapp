@@ -63,6 +63,20 @@
   flex-direction: column;
 }
 
+/* The whole card is a link to the details page (Step 4). */
+.parking-card-link {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+.parking-card-link:hover {
+  box-shadow: 0 6px 18px rgba(26, 26, 46, 0.15);
+}
+.parking-card-link:focus-visible {
+  outline: 3px solid #1a1a2e;
+  outline-offset: 3px;
+}
+
 .parking-card-body {
   padding: 16px 18px 18px;
   display: flex;

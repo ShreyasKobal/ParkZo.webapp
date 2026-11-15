@@ -1,6 +1,7 @@
 "use client";
 
 import { Suspense, useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import Navbar from "../../components/Navbar";
 import { usePublicParking } from "../../lib/parking/usePublicParking";
@@ -24,7 +25,10 @@ function ParkingCard({ location }) {
   );
 
   return (
-    <article className={`parking-card ${state}`}>
+    <Link
+      href={`/parking/${location.id}`}
+      className={`parking-card parking-card-link ${state}`}
+    >
       <div className="parking-photo-placeholder" aria-hidden="true">
         <span>P</span>
       </div>
@@ -63,7 +67,7 @@ function ParkingCard({ location }) {
           )}
         </div>
       </div>
-    </article>
+    </Link>
   );
 }
 

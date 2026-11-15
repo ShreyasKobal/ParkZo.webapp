@@ -1,0 +1,262 @@
+/* =============================================================================
+   Parking Details page (Phase 2, Step 4) — /parking/[id]
+   New file. Builds on css/parking.css (page shell, neutral photo placeholder,
+   loading / error / empty state boxes) and the existing ParkZo design language
+   (navy #1a1a2e, #f5f6fa, status colours from styles.css). No existing
+   stylesheet is modified.
+   ============================================================================= */
+
+.pd-wrap {
+  max-width: 960px;
+}
+
+.pd-back {
+  display: inline-block;
+  margin-bottom: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a2e;
+  text-decoration: none;
+}
+.pd-back:hover {
+  text-decoration: underline;
+}
+
+/* ---------- header ---------- */
+.pd-photo {
+  border-radius: 18px;
+  overflow: hidden;
+  border: #1a1a2e 2px solid;
+  background: #e5e7eb;
+  margin-bottom: 24px;
+}
+.pd-photo .parking-photo-placeholder {
+  height: 240px;
+}
+.pd-photo-note {
+  font-size: 13px;
+  font-weight: 600;
+  color: #575b63;
+  text-align: center;
+  padding: 10px 12px;
+  background: #ffffff;
+  border-top: 1px solid #e5e7eb;
+}
+
+.pd-title {
+  font-size: 30px;
+  color: #1a1a2e;
+  margin-bottom: 6px;
+  overflow-wrap: anywhere;
+}
+
+.pd-address {
+  font-size: 15px;
+  color: #6b7280;
+  line-height: 1.5;
+  margin-bottom: 12px;
+  overflow-wrap: anywhere;
+}
+
+.pd-description {
+  font-size: 15px;
+  color: #444;
+  line-height: 1.6;
+  margin-bottom: 24px;
+  max-width: 720px;
+  overflow-wrap: anywhere;
+  white-space: pre-line;
+}
+
+/* ---------- info cards ---------- */
+.pd-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  margin-top: 8px;
+}
+
+.pd-card {
+  background: #ffffff;
+  border: #1a1a2e 2px solid;
+  border-radius: 18px;
+  padding: 18px 20px 20px;
+}
+.pd-card h2 {
+  font-size: 16px;
+  color: #1a1a2e;
+  margin-bottom: 12px;
+}
+
+.pd-muted {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+/* pricing */
+.pd-rates {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.pd-rates dt {
+  font-size: 13px;
+  color: #6b7280;
+  margin-bottom: 2px;
+}
+.pd-rates dd {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a1a2e;
+}
+
+/* availability: status colours match .dp-card.* in styles.css */
+.pd-avail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.pd-avail-slots {
+  font-size: 14px;
+  font-weight: 600;
+  color: #575b63;
+}
+.pd-avail-note {
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 10px;
+}
+.pd-unset {
+  font-size: 15px;
+  font-weight: 600;
+  color: #575b63;
+}
+.pd-avail.available .status {
+  background-color: #e8f8ef;
+  color: #16a34a;
+}
+.pd-avail.limited .status {
+  background-color: #fff7ed;
+  color: #ea580c;
+}
+.pd-avail.full .status {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+.pd-avail.available .progress-fill {
+  background-color: #16a34a;
+}
+.pd-avail.limited .progress-fill {
+  background-color: #ea580c;
+}
+.pd-avail.full .progress-fill {
+  background-color: #dc2626;
+}
+
+/* amenities */
+.pd-chips {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+}
+.pd-chips li {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1a1a2e;
+  background: #f5f6fa;
+  border: 1px solid #1a1a2e;
+  border-radius: 20px;
+  padding: 4px 12px;
+  overflow-wrap: anywhere;
+}
+
+/* hours */
+.pd-open24 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #16a34a;
+}
+.pd-hours > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 6px 0;
+  border-bottom: 1px solid #f0f1f5;
+  font-size: 14px;
+}
+.pd-hours > div:last-child {
+  border-bottom: none;
+}
+.pd-hours dt {
+  color: #444;
+  font-weight: 600;
+}
+.pd-hours dd {
+  color: #1a1a2e;
+  text-align: right;
+}
+
+/* ---------- not-found link ---------- */
+.pd-state-link {
+  display: inline-block;
+  margin-top: 16px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #1a1a2e;
+  text-decoration: underline;
+}
+
+/* ---------- loading skeleton ---------- */
+.pd-skeleton {
+  background: #e5e7eb;
+  border: #d1d5db 2px solid;
+  border-radius: 14px;
+}
+.pd-skeleton-photo {
+  height: 280px;
+  border-radius: 18px;
+  margin-bottom: 24px;
+}
+.pd-skeleton-line {
+  height: 18px;
+  margin-bottom: 12px;
+  max-width: 480px;
+}
+.pd-skeleton-title {
+  height: 30px;
+  max-width: 320px;
+}
+.pd-skeleton-card {
+  height: 130px;
+  border-radius: 18px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pd-avail .progress-fill {
+    animation: none;
+  }
+}
+
+/* ---------- phones ---------- */
+@media (max-width: 640px) {
+  .pd-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .pd-title {
+    font-size: 24px;
+  }
+  .pd-photo .parking-photo-placeholder {
+    height: 180px;
+  }
+  .pd-skeleton-photo {
+    height: 200px;
+  }
+  .pd-rates {
+    gap: 20px;
+  }
+}
