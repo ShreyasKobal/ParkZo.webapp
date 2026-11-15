@@ -332,14 +332,13 @@ Ads 5%. Not a final commercial/legal/accounting policy.
 - Operating-hours schema confirmation: `parking_hours` permits at most one row per location/day and validates day numbers and open/closed row shape, but does not require seven rows. A missing day in a partial schedule must display “Hours not provided”, not “Closed”. Seven rows are not guaranteed and no Step 4 code change is required for this behavior.
 - Claude reports Step 4 scratch SQL checks 77/77, Step 4 mocked browser checks 80/80, Step 3 mocked browser checks 58/58, `npm run build` passed and `git diff --check` clean. These reported checks used scratch/mock data, not shared Supabase. Re-run the frontend checks after the navigation fix.
 
-**Verification details and boundaries****
+**Verification details and boundaries**
 - Claude reported 43/43 SQL tests on a scratch database and 58/58 browser tests against mocked RPC data. These are development-environment tests, not tests executed against shared Supabase.
 - A randomized differential check on the scratch database reported zero mismatches against the overview function for the tested locations. This is not a live-data test.
 - Shared Supabase verification covered migration success, function properties, execute grants, return structure, anonymous execution and baseline preservation.
 - Preview UI checks used a database with no approved parking locations containing slots. Actual non-empty search results cannot yet be confirmed without approved location records.
 
 **Pending / not implemented**
-- Phase 2 Step 4: Parking Details page.
 - Booking flow, slot selection and checkout holds.
 - Razorpay payments/refunds.
 - Customer dashboard improvements beyond the parking gallery.
