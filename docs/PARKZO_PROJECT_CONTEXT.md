@@ -324,7 +324,15 @@ Ads 5%. Not a final commercial/legal/accounting policy.
 - Shared Supabase baseline was checked before and after the featured migration: existing-functions hash `c4096e5f10a6ed2f9df2c5c313cdd0b9`, policy count `44`, legacy booking rows `18`; values remained unchanged.
 - No fake/demo parking records were inserted into shared Supabase.
 
-**Verification details and boundaries**
+**In progress — Phase 2 Step 4: Parking Details**
+- The approved additive migration `supabase/migrations/20261110120000_public_parking_details.sql` was committed and pushed to `develop` in commit `3373773ccfd733fb4a40908cfd74fd2e405e324f` (migration only). GitHub comparison from the prior base `087b9c6` confirms exactly one added file.
+- The migration adds `public.get_public_parking_details(p_location_id uuid)`. It has **not** been applied to shared Supabase. The migration commit explicitly records that it is not applied.
+- Frontend Step 4 work (4 modified files and 4 new files) remains uncommitted and unpushed in Claude's local working tree; it is not present on `develop`.
+- Frontend final review identified one navigation issue to fix before commit: when the details route changes from one location UUID to another, the shared refresh hook can retain the previous location's details while the new request is loading. Fix this only for the details route and add a regression test; preserve browsing/search behavior.
+- Operating-hours schema confirmation: `parking_hours` permits at most one row per location/day and validates day numbers and open/closed row shape, but does not require seven rows. A missing day in a partial schedule must display “Hours not provided”, not “Closed”. Seven rows are not guaranteed and no Step 4 code change is required for this behavior.
+- Claude reports Step 4 scratch SQL checks 77/77, Step 4 mocked browser checks 80/80, Step 3 mocked browser checks 58/58, `npm run build` passed and `git diff --check` clean. These reported checks used scratch/mock data, not shared Supabase. Re-run the frontend checks after the navigation fix.
+
+**Verification details and boundaries****
 - Claude reported 43/43 SQL tests on a scratch database and 58/58 browser tests against mocked RPC data. These are development-environment tests, not tests executed against shared Supabase.
 - A randomized differential check on the scratch database reported zero mismatches against the overview function for the tested locations. This is not a live-data test.
 - Shared Supabase verification covered migration success, function properties, execute grants, return structure, anonymous execution and baseline preservation.
@@ -359,7 +367,7 @@ Ads 5%. Not a final commercial/legal/accounting policy.
         1 Auth/navigation foundation                    Completed
         2 Phase 2 database foundation                   Completed
         3 Public parking browsing/search                Completed
-        4 Parking details                               Pending
+        4 Parking details                               In progress
         5 Booking flow and slot hold                    Pending
         6 Razorpay payments/refunds                     Pending
         7 Customer dashboard                            Pending
@@ -370,7 +378,7 @@ Ads 5%. Not a final commercial/legal/accounting policy.
        12 Security, QA, backups, deployment readiness   Pending
 
 
-## 10. Next task: Phase 2 Step 4 — Parking Details
+## 10. Current task: Phase 2 Step 4 — Parking Details
 
 Phase 2 Step 3, Public Parking Browsing and Search, is implemented,
 pushed to `develop`, and its two additive read-function migrations are
@@ -399,7 +407,7 @@ or change existing SQL functions/policies unless a separately reviewed
 and approved requirement makes that necessary. Prepare a scoped
 implementation plan and risks for review before coding.
 
-## 11. Phase 2 Step 4 — Parking Details (approved plan; implementation pending)
+## 11. Phase 2 Step 4 — Parking Details (approved scope and implementation status)
 
 **Scope and implementation decisions**
 - Add a public details route: `/parking/[id]`, using the location UUID.
@@ -411,6 +419,7 @@ implementation plan and risks for review before coding.
 - Show an availability label only (Available/Limited/Full); never expose the internal location approval lifecycle/status.
 - Show location name, full postal address including country, description, 2W/4W hourly rates, amenities, operating hours and aggregate availability.
 - Custom hours use day numbering 0=Sunday through 6=Saturday. A closing time earlier than opening time is shown as an overnight window ending the next day. A missing schedule is shown as “Hours not provided”; 24/7 locations show “Open 24/7”.
+- The core schema enforces a unique location/day pair and valid day/row shapes, but does not require seven `parking_hours` rows. Partial schedules are valid; a day without a row is shown as “Hours not provided”, not “Closed”.
 - Do not show latitude/longitude or map/directions in Step 4; those remain for the Maps step.
 - Do not add a booking CTA, slot-by-slot selection or booking controls; those remain Step 5.
 
@@ -436,7 +445,7 @@ implementation plan and risks for review before coding.
 - Any new details RPC migration is additive, reviewed in full, committed/pushed to Git before it is applied to shared Supabase, and requires separate explicit approval before application. Claude must not apply SQL to shared Supabase.
 - Implementation, migration and test diffs must be reviewed before commit/push. Do not promote to `main` or production without explicit approval.
 
-**Current status:** The Step 4 plan is approved with the decisions above. Live Supabase read-only verification is pending; no Step 4 code or migration has been written.
+**Current status:** The Step 4 plan and scope are approved. Live Supabase read-only inspection was completed 2026-11-10. The migration was committed/pushed to `develop` in `3373773ccfd733fb4a40908cfd74fd2e405e324f`, migration only, and is not yet applied to shared Supabase. Frontend implementation remains uncommitted/unpushed in Claude's working tree and needs the location-ID navigation stale-data fix plus regression test and final review. No Preview verification of Step 4 has been performed.
 
 ## 12. Risks and safeguards
 
