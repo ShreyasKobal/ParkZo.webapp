@@ -257,57 +257,60 @@ must use the two project Markdown documents as shared working context.
 
 Phase 2 Step 3, Public Parking Browsing and Search, is complete and
 pushed to `develop`. Its two additive read-function migrations have
-been applied to shared Supabase and verified. Home, Dashboard and
-`/parking` are connected to real Supabase data. Preview UI checks
-confirmed the pages render and the empty state behaves as expected
-with no approved parking locations containing slots.
+been applied to shared Supabase and verified.
 
-**Current task: Phase 2 Step 4 — Parking Details.**
+**Completed: Phase 2 Step 4 — Parking Details.**
 
 - The additive SQL migration
   `supabase/migrations/20261110120000_public_parking_details.sql`
-  was committed/pushed to `develop` in commit
-  `3373773ccfd733fb4a40908cfd74fd2e405e324f` and applied to shared
-  Supabase on 2026-11-15 after separate explicit approval.
+  was committed/pushed in `3373773ccfd733fb4a40908cfd74fd2e405e324f`
+  and applied to shared Supabase on 2026-11-15 after separate approval.
 - Post-application checks A–D passed. The existing-functions hash
   remained `c4096e5f10a6ed2f9df2c5c313cdd0b9`, policy count remained
-  `44`, and legacy `parking_bookings` rows remained `18`. The new
-  function's SECURITY DEFINER/STABLE properties, pinned search path,
-  jsonb return type and execute grants were verified. Anonymous calls
-  with a random UUID and NULL both returned NULL without errors.
-- The reviewed frontend implementation was pushed to `develop` in
-  commit `a7b163eaab58906b62bce1e1cc7595ec2381f726`. It contains
-  exactly four modified files and three new files. It adds the public
-  `/parking/[id]` details page, the RPC data helper, details styling,
-  listing/dashboard deep links and the details-only scoped refresh fix.
-- The details-only refresh key prevents a previous location's data or
-  error from appearing after navigation to a different location UUID.
-  List/search and featured hook behavior remains unscoped and unchanged.
-- Claude reported post-fix results: Step 4 scratch SQL 77/77, Step 4
-  mocked browser 92/92, Step 3 mocked browser 58/58, separate hook
-  regression harness 9/9, `npm run build` passed and
-  `git diff --check` clean. These were Claude-reported development
-  checks, not independently run by ChatGPT.
-- Operating-hours schema does not require seven rows per location.
-  Partial schedules are valid; missing days display “Hours not
-  provided”, never an assumed “Closed”.
-- No Preview verification of Step 4 has been completed. Shared
-  Supabase currently has no approved parking locations or live slots,
-  so populated live details cannot be verified yet. Do not insert demo
-  data. Do not merge to `main` or promote to Production without
-  separate approval.
+  `44`, and legacy `parking_bookings` rows remained `18`.
+- The reviewed frontend was pushed to `develop` in
+  `a7b163eaab58906b62bce1e1cc7595ec2381f726`, with exactly four
+  modified and three new application files.
+- Vercel reported a successful deployment check. The user manually
+  confirmed that the `develop` Preview checks passed: Home,
+  `/parking`, invalid and non-existent details ids, mobile layout,
+  navbar/search and the existing dashboard.
+- Populated details and real card-to-details navigation remain
+  unverified because the shared database has no approved locations or
+  live slots. No demo data was inserted. Nothing was promoted to
+  `main` or Production.
 
-**Next steps / handoff**
-1. Verify the `develop` Vercel Preview deployment and manually test the
-   details route's loading, invalid/not-found, retry/error and responsive
-   states. Verify that listing and Dashboard parking cards link to the
-   UUID details route when real approved cards are available.
-2. Since shared Supabase has no approved locations or live slots, do
-   not expect a populated live details page or availability comparison.
-   Complete those checks only after real approved data exists; do not
-   add demonstration records.
-3. Keep `main` and Production unchanged unless the team gives separate
-   explicit approval.
+**Next task: Phase 2 Step 5 — Booking Flow and Slot Hold.**
+
+Before planning or coding Step 5:
+1. Fetch the latest `develop` branch HEAD/status and read both project
+   documents completely.
+2. Inspect the actual current repository and the core schema migration.
+   Read the current definitions of `create_slot_hold()`,
+   `release_expired_slot_holds()`, `slot_is_free()` and
+   `get_slot_availability()`. Re-check live schema, function grants,
+   RLS, constraints, triggers and indexes read-only.
+3. Inspect the existing `/booking` route and related code/auth patterns.
+4. Re-verify the known semantics: hold creation does not update the slot
+   status; expired-hold release has been observed resetting slot status
+   to available; `slot_is_free()` checks pending/confirmed bookings and
+   active holds; `get_slot_availability()` may count held/occupied
+   statuses as available. Do not assume these old findings remain true
+   without inspecting current SQL. Do not silently change existing
+   functions.
+5. Compare the actual schema/code with the locked booking requirements
+   in the context document. Report gaps, concurrency/expiry risks,
+   security implications and the smallest implementation plan before
+   coding.
+
+Keep the five-minute hold and privileged operations server-side. Never
+expose the service-role key in browser code. Booking/payment boundaries
+must remain clear: Razorpay and refunds are Step 6, not an automatic
+addition to Step 5. Any shared-Supabase SQL change requires its own
+review and separate explicit application approval. Do not add demo data.
+
+Do not merge to `main` or deploy Production without separate explicit
+approval.
 
 Both assistants must reread both project documents at the start of each
 new step and report any discrepancy before changing scope.
