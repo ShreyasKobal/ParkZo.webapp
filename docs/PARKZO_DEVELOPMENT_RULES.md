@@ -253,7 +253,7 @@ must use the two project Markdown documents as shared working context.
   shared Supabase. Each of those actions follows the project's explicit
   approval and deployment rules.
 
-## 13. Current next task
+## 13. Current task and next action
 
 Phase 2 Step 3, Public Parking Browsing and Search, is complete and
 pushed to `develop`. Its two additive read-function migrations have
@@ -262,27 +262,42 @@ been applied to shared Supabase and verified. Home, Dashboard and
 confirmed the pages render and the empty state behaves as expected
 with no approved parking locations containing slots.
 
-**Next task: Phase 2 Step 4 — Parking Details.**
+**Current task: Phase 2 Step 4 — Parking Details.**
 
-Before coding:
-1. Inspect the actual current GitHub branch, working tree and relevant
-   application files.
-2. Read the committed core schema migration and both public parking
-   migrations. Verify the exact tables, columns, constraints, RLS,
-   policies, triggers and functions involved.
-3. Inspect the current `/parking` implementation and preserve its
-   working search/listing behavior and existing ParkZo design.
-4. Map the requested details experience to the locked product
-   requirements and actual schema. Flag conflicts or missing schema
-   support before implementation.
+- The additive SQL migration
+  `supabase/migrations/20261110120000_public_parking_details.sql`
+  was committed/pushed to `develop` in commit
+  `3373773ccfd733fb4a40908cfd74fd2e405e324f`. This commit contains
+  only the migration. It has not been applied to shared Supabase.
+- Frontend files remain uncommitted/unpushed in Claude's local working
+  tree. Final review requires a details-route fix so navigating between
+  two location UUIDs cannot briefly show the previous location's data,
+  plus a regression test. Do not change list/search refresh behavior.
+- The project owner must record the pre-migration Supabase baseline and
+  provide separate explicit approval before applying the migration.
+  Claude must not apply SQL to shared Supabase.
+- After migration application and read-only verification, complete the
+  frontend fix, test/build review, approved frontend push and Preview
+  verification. Do not promote to `main` or Production without
+  separate explicit approval.
+- Operating-hours schema does not require seven rows per location.
+  Partial schedules are valid; missing days display “Hours not
+  provided”, never an assumed “Closed”.
 
-Step 4 is limited to the parking location details experience. Planned
-content includes location information, full address, 2W/4W rates,
-photos, amenities, operating hours and slot availability where
-supported by the approved requirements and schema. Do not invent
-additional capabilities or change booking, payment, auth, owner/admin
-workflows, existing SQL functions, or RLS policies without a separate
-review and explicit approval.
+**Next steps / handoff**
+1. Project owner records the baseline values in the shared Supabase SQL
+   Editor: existing-functions hash
+   `c4096e5f10a6ed2f9df2c5c313cdd0b9`, policy count `44`, and
+   legacy `parking_bookings` rows `18`. These are expected reference
+   values; compare the actual before/after results rather than assuming.
+2. Obtain separate explicit approval before applying the committed
+   migration to shared Supabase. Run its read-only verification queries
+   afterward and compare the baseline.
+3. Finish the frontend route-ID stale-data fix and regression test,
+   then review tests, build and diff before pushing frontend changes.
+4. Verify the Step 4 Preview experience. Since shared Supabase currently
+   has no approved parking locations, populated live details cannot be
+   verified until real approved data exists. Do not insert demo data.
 
-Prepare the smallest safe implementation plan, affected files,
-data/security implications and test plan for review before coding.
+Both assistants must reread both project documents at the start of each
+new step and report any discrepancy before changing scope.
